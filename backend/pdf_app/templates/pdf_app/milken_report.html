@@ -1,0 +1,1455 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  @page {
+    size: A4;
+    margin: 15mm 15mm 15mm 15mm;
+    @bottom-right {
+      content: counter(page);
+      font-family: 'Cairo', sans-serif;
+      font-size: 10pt;
+      color: #555;
+    }
+  }
+
+  body {
+    font-family: 'Cairo', 'Arial', sans-serif;
+    font-size: 10pt;
+    color: #333;
+    direction: rtl;
+  }
+
+  /* ─── PAGE BREAKS ─── */
+  .page-break { page-break-after: always; }
+  .no-break   { page-break-inside: avoid; }
+
+  /* ─── COVER PAGE ─── */
+  .cover-page {
+    width: 100%;
+    min-height: 247mm;
+    display: flex;
+    position: relative;
+    page-break-after: always;
+  }
+  .cover-left {
+    width: 48%;
+    background-color: #1c3370;
+    padding: 40px 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: white;
+  }
+  .cover-right {
+    width: 52%;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover-right img.city-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .cover-milken-logo {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255,255,255,0.85);
+    padding: 8px 20px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .cover-title {
+    font-size: 20pt;
+    font-weight: 800;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    color: white;
+  }
+  .cover-subtitle {
+    font-size: 16pt;
+    font-weight: 700;
+    color: white;
+  }
+  .sfda-logo-top {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 30px;
+  }
+  .sfda-logo-box {
+    background: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+  }
+  .sfda-text {
+    color: white;
+    font-size: 9pt;
+  }
+  .green-corner {
+    width: 16px;
+    height: 16px;
+    border-top: 4px solid #4ec94e;
+    border-right: 4px solid #4ec94e;
+    margin-bottom: 15px;
+  }
+
+  /* ─── LOGOS HEADER (non-cover pages) ─── */
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+  }
+  .logos-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .logo-box {
+    border: 1px solid #ddd;
+    padding: 4px 8px;
+    border-radius: 3px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .logo-circle {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: #1c3370;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logo-circle span { color: white; font-weight: 800; font-size: 8pt; }
+  .milken-logo-text {
+    font-size: 7pt;
+    font-weight: 700;
+    color: #1c3370;
+    line-height: 1.3;
+    text-align: center;
+  }
+  .sfda-logo-header {
+    display: flex; align-items: center; gap: 6px;
+  }
+  .sfda-icon { width: 28px; height: 28px; }
+  .sfda-name { font-size: 8pt; font-weight: 700; color: #1c3370; }
+
+  /* ─── SECTION TITLE BADGE (gold/amber right-side) ─── */
+  .section-badge {
+    background-color: #b8932a;
+    color: white;
+    padding: 6px 16px;
+    font-size: 11pt;
+    font-weight: 700;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 14px;
+    float: left;
+  }
+  .section-badge-clear { clear: both; }
+
+  /* ─── GREEN SECTION HEADER (full-width green bar) ─── */
+  .green-bar {
+    background-color: #28a745;
+    color: white;
+    padding: 8px 14px;
+    font-size: 11pt;
+    font-weight: 700;
+    margin: 10px 0 8px 0;
+    text-align: center;
+    border-radius: 3px;
+  }
+
+  /* ─── BLUE HEADER BAR ─── */
+  .blue-bar {
+    background-color: #1c3370;
+    color: white;
+    padding: 7px 14px;
+    font-size: 10pt;
+    font-weight: 700;
+    margin: 8px 0 0 0;
+    text-align: center;
+    border-radius: 3px 3px 0 0;
+  }
+  .blue-bar-row {
+    display: flex;
+    background-color: #1c3370;
+    color: white;
+  }
+  .blue-bar-row .col {
+    flex: 1;
+    padding: 6px 10px;
+    font-size: 9pt;
+    font-weight: 700;
+    text-align: center;
+    border-left: 1px solid rgba(255,255,255,0.2);
+  }
+  .blue-bar-row .col:last-child { border-left: none; }
+
+  /* ─── TABLES ─── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9.5pt;
+  }
+  table th {
+    background-color: #1c3370;
+    color: white;
+    padding: 7px 10px;
+    text-align: center;
+    font-weight: 700;
+    border: 1px solid #1c3370;
+  }
+  table td {
+    padding: 7px 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+    vertical-align: middle;
+  }
+  table tr:nth-child(even) td { background-color: #f0f4ff; }
+  table tr:nth-child(odd) td  { background-color: #ffffff; }
+
+  /* Day header rows in agenda table */
+  .day-row td {
+    background-color: #f0a030 !important;
+    color: white;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  /* ─── INFO BOXES (colored key-value) ─── */
+  .info-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    margin: 10px 0;
+  }
+  .info-box {
+    flex: 1;
+    min-width: 23%;
+    border: 1px solid #ddd;
+    text-align: center;
+  }
+  .info-box-label {
+    padding: 5px 8px;
+    font-weight: 700;
+    font-size: 9pt;
+    color: white;
+  }
+  .info-box-value {
+    padding: 6px 8px;
+    font-size: 8.5pt;
+    background: white;
+  }
+  .bg-orange { background-color: #e07020; }
+  .bg-gold   { background-color: #b8932a; }
+  .bg-blue   { background-color: #1c3370; }
+  .bg-green  { background-color: #28a745; }
+
+  /* ─── VISIT OBJECTIVE BOXES ─── */
+  .objectives-section {
+    border: 1px solid #28a745;
+    border-radius: 4px;
+    margin: 8px 0;
+  }
+  .objectives-title {
+    background: #28a745;
+    color: white;
+    padding: 7px 14px;
+    font-weight: 700;
+    font-size: 10pt;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .objectives-body {
+    padding: 10px 14px;
+  }
+  .objectives-body ol {
+    padding-right: 20px;
+    line-height: 1.8;
+    font-size: 9.5pt;
+  }
+
+  /* ─── MEETING DATE BOX ─── */
+  .two-box-row {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0;
+  }
+  .field-box {
+    flex: 1;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+  }
+  .field-box-label {
+    background: #1c3370;
+    color: white;
+    padding: 6px 12px;
+    font-weight: 700;
+    font-size: 9pt;
+    text-align: center;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .field-box-value {
+    padding: 8px 12px;
+    font-size: 9.5pt;
+    text-align: center;
+    background: white;
+  }
+
+  /* ─── SECTION DIVIDER ─── */
+  .section-title-slide {
+    background: #1c3370;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    page-break-after: always;
+    margin: 0 -15mm;
+    padding: 40px;
+  }
+  .section-title-slide h2 {
+    color: white;
+    font-size: 22pt;
+    font-weight: 800;
+    text-align: center;
+  }
+
+  /* ─── TOC TABLE ─── */
+  .toc-table td:first-child {
+    width: 70%;
+    text-align: right;
+  }
+  .toc-table td:last-child {
+    width: 30%;
+    text-align: center;
+    font-weight: 700;
+  }
+
+  /* ─── BULLET LISTS ─── */
+  ul.bullet-list {
+    padding-right: 18px;
+    line-height: 1.9;
+    font-size: 9.5pt;
+  }
+  ul.bullet-list li { margin-bottom: 3px; }
+
+  /* ─── SPEAKERS GRID ─── */
+  .speakers-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 8px 0;
+  }
+  .speaker-card {
+    width: calc(25% - 8px);
+    border: 1px solid #ddd;
+    text-align: center;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .speaker-photo {
+    width: 100%;
+    height: 80px;
+    background: #e0e6f5;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 8pt; color: #888;
+  }
+  .speaker-name {
+    font-size: 7.5pt;
+    font-weight: 700;
+    color: #1c3370;
+    padding: 4px 5px 2px;
+    text-decoration: underline;
+  }
+  .speaker-role {
+    font-size: 7pt;
+    color: #555;
+    padding: 0 5px 5px;
+    line-height: 1.4;
+  }
+
+  /* ─── CONSULATE BOX ─── */
+  .consul-photo {
+    width: 80px;
+    height: 80px;
+    background: #ddd;
+    border-radius: 3px;
+    display: inline-block;
+  }
+  .consul-info-cell {
+    vertical-align: top;
+    text-align: right;
+    padding-right: 10px;
+  }
+
+  /* ─── PRAYER TIMES ─── */
+  .prayer-header th {
+    background-color: #28a745;
+  }
+
+  /* ─── WEATHER ROW ─── */
+  .weather-row {
+    display: flex;
+    gap: 20px;
+    margin: 10px 0;
+    background: #f8f8f8;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 4px;
+  }
+  .weather-day {
+    text-align: center;
+    flex: 1;
+  }
+  .weather-day-num { font-size: 14pt; font-weight: 700; color: #1c3370; }
+  .weather-icon { font-size: 20pt; margin: 4px 0; }
+  .weather-high { font-size: 10pt; font-weight: 700; }
+  .weather-low  { font-size: 9pt; color: #888; }
+
+  /* ─── ORANGE DETAIL BOXES ─── */
+  .detail-box {
+    background: white;
+    border: 1px solid #ddd;
+    padding: 8px 12px;
+    margin: 5px 0;
+    font-size: 9pt;
+  }
+  .detail-box strong { color: #1c3370; }
+
+  /* ─── SESSION TABLE ─── */
+  .session-table th { background: #1c3370; font-size: 9pt; }
+  .session-table .highlight-cell {
+    background: #fff3cd !important;
+    color: #b8932a;
+    font-weight: 700;
+  }
+
+  /* ─── PREV OUTCOMES ─── */
+  .outcome-section-title {
+    font-size: 10pt;
+    font-weight: 700;
+    color: #1c3370;
+    margin: 10px 0 4px 0;
+  }
+
+  /* ─── BILATERAL MEETING TABLE ─── */
+  .bilateral-header {
+    background: #b8932a;
+    color: white;
+    padding: 7px 14px;
+    font-weight: 700;
+    font-size: 10pt;
+    text-align: center;
+    border-radius: 3px 3px 0 0;
+  }
+  .bilateral-body {
+    border: 1px solid #ddd;
+    border-top: none;
+  }
+  .bilateral-row {
+    display: flex;
+    border-bottom: 1px solid #ddd;
+  }
+  .bilateral-row:last-child { border-bottom: none; }
+  .bilateral-label {
+    width: 30%;
+    background: #1c3370;
+    color: white;
+    padding: 6px 10px;
+    font-weight: 700;
+    font-size: 8.5pt;
+    text-align: center;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .bilateral-value {
+    width: 70%;
+    padding: 6px 10px;
+    font-size: 9pt;
+    vertical-align: middle;
+  }
+
+  /* ─── AGENDA SESSION TALKING POINTS ─── */
+  .talking-points ul {
+    padding-right: 18px;
+    font-size: 9pt;
+    line-height: 1.7;
+  }
+  .talking-points .underline { text-decoration: underline; font-weight: 700; }
+
+  /* ─── PAGE NUMBER FOOTER ─── */
+  .page-footer {
+    position: fixed;
+    bottom: 5mm;
+    right: 15mm;
+    font-size: 9pt;
+    color: #666;
+    background: white;
+    padding: 2px 6px;
+  }
+</style>
+</head>
+<body>
+
+{# ══════════════════════════════════════════════ #}
+{# PAGE 1 — COVER                                #}
+{# ══════════════════════════════════════════════ #}
+<div class="cover-page">
+  <div class="cover-left">
+    <!-- SFDA logo area top-right of left panel -->
+    <div class="sfda-logo-top">
+      <div class="sfda-logo-box">
+        <svg width="90" height="32" viewBox="0 0 120 42">
+          <text x="5" y="28" font-family="Arial" font-size="11" font-weight="bold" fill="#1c3370">الهيئة العامة</text>
+          <text x="5" y="40" font-family="Arial" font-size="9" fill="#1c3370">للغذاء والدواء</text>
+          <text x="80" y="20" font-family="Arial" font-size="7" fill="#1c3370">Saudi Food &amp;</text>
+          <text x="80" y="30" font-family="Arial" font-size="7" fill="#1c3370">Drug Authority</text>
+          <circle cx="110" cy="22" r="10" fill="none" stroke="#1c3370" stroke-width="1.5"/>
+          <text x="105" y="26" font-family="Arial" font-size="9" font-weight="bold" fill="#1c3370">S</text>
+        </svg>
+      </div>
+    </div>
+    <div class="green-corner"></div>
+    <div class="cover-title">{{ data.report_title }}</div>
+    <div class="cover-subtitle">{{ data.report_subtitle }}</div>
+  </div>
+  <div class="cover-right">
+    <!-- City skyline placeholder -->
+    <div style="width:100%;height:100%;background:linear-gradient(180deg,#87CEEB 0%,#b0c8e8 40%,#c8a882 70%,#a09060 100%);display:flex;align-items:flex-end;">
+      <div style="width:100%;padding:20px;background:rgba(0,0,0,0.3);">
+        <div style="background:rgba(255,255,255,0.9);padding:8px 16px;border-radius:4px;display:inline-flex;align-items:center;gap:10px;">
+          <svg width="28" height="28" viewBox="0 0 28 28">
+            <rect width="28" height="28" rx="4" fill="#1c3370"/>
+            <line x1="4" y1="14" x2="24" y2="14" stroke="white" stroke-width="2"/>
+            <line x1="14" y1="4" x2="14" y2="24" stroke="white" stroke-width="2"/>
+            <circle cx="14" cy="14" r="7" fill="none" stroke="white" stroke-width="1.5"/>
+          </svg>
+          <div style="font-family:Arial;font-size:8pt;font-weight:bold;color:#1c3370;line-height:1.3;">MILKEN<br>INSTITUTE</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{# ══════════════════════════════════════════════ #}
+{# PAGE 2 — TABLE OF CONTENTS                    #}
+{# ══════════════════════════════════════════════ #}
+<div class="page-break">
+  <div class="page-header">
+    <div class="logos-row">
+      <div class="logo-box">
+        <svg width="26" height="26" viewBox="0 0 28 28"><rect width="28" height="28" rx="3" fill="#1c3370"/><line x1="4" y1="14" x2="24" y2="14" stroke="white" stroke-width="2"/><line x1="14" y1="4" x2="14" y2="24" stroke="white" stroke-width="2"/><circle cx="14" cy="14" r="7" fill="none" stroke="white" stroke-width="1.5"/></svg>
+        <div class="milken-logo-text">MILKEN<br>INSTITUTE</div>
+      </div>
+      <div class="sfda-logo-header">
+        <svg width="28" height="28" viewBox="0 0 28 28"><circle cx="14" cy="14" r="13" fill="#1c3370"/><text x="7" y="18" font-family="Arial" font-size="9" font-weight="bold" fill="white">SFDA</text></svg>
+      </div>
+    </div>
+    <div class="section-badge">فهرس المحتويات</div>
+  </div>
+  <div class="section-badge-clear"></div>
+
+  <table class="toc-table" style="margin-top:10px;">
+    <thead>
+      <tr>
+        <th style="text-align:right;">الموضوع</th>
+        <th style="width:80px;">الصفحة</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td style="text-align:right;">المعلومات الأساسية للزيارة</td><td>2</td></tr>
+      <tr><td style="text-align:right;">معلومات عامة</td><td>3</td></tr>
+      <tr><td style="text-align:right;">موجز جدول أعمال الزيارة</td><td>4</td></tr>
+      <tr><td style="text-align:right;">قائمة الوفد</td><td>5</td></tr>
+      <tr><td style="text-align:right;">بيانات المؤتمر والمحاور الرئيسية</td><td>7-6</td></tr>
+      <tr><td style="text-align:right;">مخرجات الجولات السابقة للمؤتمر</td><td>8</td></tr>
+      <tr><td style="text-align:right;">جدول جلسات معالي الرئيس التنفيذى</td><td>11-10-9</td></tr>
+      <tr><td style="text-align:right;">المتحدثون</td><td>21-12</td></tr>
+      <tr><td style="text-align:right;">اللقاءات الثنائية ونقاط الحديث على هامش الزيارة</td><td>23-22</td></tr>
+      <tr><td style="text-align:right;">سفارة المملكة لدى الولايات المتحدة الأمريكية</td><td>25-24</td></tr>
+      <tr><td style="text-align:right;">الطقس ومواقيت الصلاة</td><td>26</td></tr>
+      <tr><td style="text-align:right;">المرفقات</td><td>27</td></tr>
+    </tbody>
+  </table>
+</div>
+
+{# ══════════════════════════════════════════════ #}
+{# PAGE 3 — BASIC VISIT INFO                     #}
+{# ══════════════════════════════════════════════ #}
+<div class="page-break">
+  <div class="page-header">
+    <div class="logos-row">
+      <div class="logo-box">
+        <svg width="26" height="26" viewBox="0 0 28 28"><rect width="28" height="28" rx="3" fill="#1c3370"/><line x1="4" y1="14" x2="24" y2="14" stroke="white" stroke-width="2"/><line x1="14" y1="4" x2="14" y2="24" stroke="white" stroke-width="2"/><circle cx="14" cy="14" r="7" fill="none" stroke="white" stroke-width="1.5"/></svg>
+        <div class="milken-logo-text">MILKEN<br>INSTITUTE</div>
+      </div>
+      <div class="sfda-logo-header">
+        <svg width="28" height="28" viewBox="0 0 28 28"><circle cx="14" cy="14" r="13" fill="#1c3370"/><text x="7" y="18" font-family="Arial" font-size="9" font-weight="bold" fill="white">SFDA</text></svg>
+      </div>
+    </div>
+    <div class="section-badge">المعلومات الأساسية للزيارة</div>
+  </div>
+  <div class="section-badge-clear"></div>
+
+  <div class="two-box-row">
+    <div class="field-box">
+      <div class="field-box-label">
+        <svg width="16" height="16" viewBox="0 0 16 16" style="margin-left:6px;"><rect x="1" y="3" width="14" height="12" rx="2" fill="none" stroke="white" stroke-width="1.5"/><line x1="5" y1="1" x2="5" y2="5" stroke="white" stroke-width="1.5"/><line x1="11" y1="1" x2="11" y2="5" stroke="white" stroke-width="1.5"/></svg>
+        تاريخ الاجتماع
+      </div>
+      <div class="field-box-value"><strong>{{ data.meeting_date }}</strong></div>
+    </div>
+    <div class="field-box">
+      <div class="field-box-label">
+        <svg width="16" height="16" viewBox="0 0 16 16" style="margin-left:6px;"><circle cx="8" cy="6" r="3" fill="none" stroke="white" stroke-width="1.5"/><path d="M8 2 C4 2 2 5 2 8 C2 12 8 15 8 15 C8 15 14 12 14 8 C14 5 12 2 8 2 Z" fill="none" stroke="white" stroke-width="1.5"/></svg>
+        المدينة
+      </div>
+      <div class="field-box-value"><strong>{{ data.city }}</strong></div>
+    </div>
+  </div>
+
+  <div class="objectives-section">
+    <div class="objectives-title">
+      أهداف الزيارة
+      <svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="white" stroke-width="1.5"/><circle cx="10" cy="10" r="5" fill="none" stroke="white" stroke-width="1.5"/><circle cx="10" cy="10" r="2" fill="white"/><line x1="10" y1="1" x2="10" y2="4" stroke="white" stroke-width="1.5"/></svg>
+    </div>
+    <div class="objectives-body">
+      <ol>
+        {% for obj in data.visit_objectives %}
+        <li>{{ obj }}</li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+</div>
+
+{# ══════════════════════════════════════════════ #}
+{# PAGE 4 — GENERAL INFO (USA)                   #}
+{# ══════════════════════════════════════════════ #}
+<div class="page-break">
+  <div class="page-header">
+    <div class="logos-row">
+      <div class="logo-box">
+        <svg width="26" height="26" viewBox="0 0 28 28"><rect width="28" height="28" rx="3" fill="#1c3370"/><line x1="4" y1="14" x2="24" y2="14" stroke="white" stroke-width="2"/><line x1="14" y1="4" x2="14" y2="24" stroke="white" stroke-width="2"/><circle cx="14" cy="14" r="7" fill="none" stroke="white" stroke-width="1.5"/></svg>
+        <div class="milken-logo-text">MILKEN<br>INSTITUTE</div>
+      </div>
+    </div>
+    <div class="section-badge">معلومات عامة</div>
+  </div>
+  <div class="section-badge-clear"></div>
+
+  <!-- Country + President row -->
+  <div style="display:flex;gap:20px;margin-bottom:12px;">
+    <div style="flex:1;text-align:center;">
+      <div class="blue-bar">الدولة</div>
+      <div style="padding:10px;border:1px solid #ddd;border-top:none;">
+        <!-- US flag SVG -->
+        <svg width="60" height="40" viewBox="0 0 60 40">
+          <rect width="60" height="40" fill="#B22234"/>
+          {% for i in "0123456789" %}
+          {% endfor %}
+          <rect y="3" width="60" height="3" fill="white"/>
+          <rect y="9" width="60" height="3" fill="white"/>
+          <rect y="15" width="60" height="3" fill="white"/>
+          <rect y="21" width="60" height="3" fill="white"/>
+          <rect y="27" width="60" height="3" fill="white"/>
+          <rect y="33" width="60" height="3" fill="white"/>
+          <rect width="24" height="22" fill="#3C3B6E"/>
+          <circle cx="4" cy="4" r="1.5" fill="white"/>
+          <circle cx="12" cy="4" r="1.5" fill="white"/>
+          <circle cx="20" cy="4" r="1.5" fill="white"/>
+          <circle cx="8" cy="8" r="1.5" fill="white"/>
+          <circle cx="16" cy="8" r="1.5" fill="white"/>
+          <circle cx="4" cy="12" r="1.5" fill="white"/>
+          <circle cx="12" cy="12" r="1.5" fill="white"/>
+          <circle cx="20" cy="12" r="1.5" fill="white"/>
+          <circle cx="8" cy="16" r="1.5" fill="white"/>
+          <circle cx="16" cy="16" r="1.5" fill="white"/>
+        </svg>
+        <div style="font-size:9pt;margin-top:5px;">الولايات المتحدة الأمريكية</div>
+      </div>
+    </div>
+    <div style="flex:1;text-align:center;">
+      <div class="blue-bar">الرئيس</div>
+      <div style="padding:10px;border:1px solid #ddd;border-top:none;">
+        <div style="width:50px;height:60px;background:#ccc;margin:0 auto 5px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:7pt;color:#666;">صورة</div>
+        <div style="font-size:9pt;">الرئيس الأمريكى دونالد ترامب</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="green-bar">نظرة عامة</div>
+  <div style="border:1px solid #ddd;padding:10px;background:white;font-size:9pt;line-height:1.8;">
+    <ul class="bullet-list">
+      <li>تأسست الولايات المتحدة رسمياً في 4 يوليو 1776 بإعلان الاستقلال عن بريطانيا العظمى وتتكون من 50 ولاية إلى جانب مقاطعة العاصمة واشنطن.</li>
+      <li>الصناعة: تقود الولايات المتحدة القوة الصناعية في العالم بإنتاج صناعي يقدر سنوياً بنحو 2.696.880 مليون دولار أمريكي. تشمل الصناعات الرئيسية البترول و الحديد السيارات الاتصالات الكيماويات الإلكترونيات الأغذية السلع الاستهلاكية التعدين والأخشاب.</li>
+      <li>الولايات المتحدة تمتلك أكبر اقتصاد في العالم بإجمالي ناتج محلي تجاوز 26 تريليون دولار في 2023 تمثل نحو ربع الاقتصاد العالمي.</li>
+      <li>في 5 أبريل 2025 أعلن الرئيس الأمريكى دونالد ترامب عن فرض تعرفة جمركية جديدة تهدف إلى إعادة تشكيل سياسات التجارة الخارجية للولايات المتحدة. تتضمن هذه الإجراءات فرض تعرفة أساسية بنسبة 10% على جميع الواردات مع تطبيق نسب أعلى على بعض الشركاء التجاريين الرئيسيين.</li>
+    </ul>
+  </div>
+
+  <div class="info-grid" style="margin-top:12px;">
+    <div class="info-box">
+      <div class="info-box-label bg-orange">العاصمة</div>
+      <div class="info-box-value">واشنطن</div>
+    </div>
+    <div class="info-box">
+      <div class="info-box-label bg-orange">التعداد السكافي</div>
+      <div class="info-box-value" style="font-size:7.5pt;">عدد السكان في الولايات المتحدة 340,110,988 نسمة (بحسب تقديرات مكتب الإحصاء الأمريكى لعام 2024).</div>
+    </div>
+    <div class="info-box">
+      <div class="info-box-label bg-orange">العملة</div>
+      <div class="info-box-value">دولار امريكى<br>سعر الصرف 1 دولار مقابل 3.75 ريال سعودى</div>
+    </div>
+    <div class="info-box">
+      <div class="info-box-label bg-orange">الحكومة</div>
+      <div class="info-box-value">نظام جمهوري دستوري فيدرالي برئاسة السيد دونالد ترامب</div>
+    </div>
+  </div>
+  <div class="info-grid">
+    <div class="info-box">
+      <div class="info-box-label bg-gold">اللغة الرسمية</div>
+      <div class="info-box-value">اللغة الانجليزية</div>
+    </div>
+    <div class="info-box">
+      <div class="info-box-label bg-gold">الديانة</div>
+      <div class="info-box-value">المسيحية</div>
+    </div>
+    <div class="info-box">
+      <div class="info-box-label bg-gold">المساحة</div>
+      <div class="info-box-value">تبلغ المساحة الإجمالية: 9,833,517 كيلومتر مربع</div>
+    </div>
+  </div>
+</div>
+
+{# ══════════════════════════════════════════════ #}
+{# PAGE 5 — AGENDA SCHEDULE                      #}
+{# ══════════════════════════════════════════════ #}
+<div class="page-break">
+  <div class="page-header">
+    <div class="logos-row">
+      <div class="logo-box">
+        <svg width="26" height="26" viewBox="0 0 28 28"><rect width="28" height="28" rx="3" fill="#1c3370"/><line x1="4" y1="14" x2="24" y2="14" stroke="white" stroke-width="2"/><line x1="14" y1="4" x2="14" y2="24" stroke="white" stroke-width="2"/><circle cx="14" cy="14" r="7" fill="none" stroke="white" stroke-width="1.5"/></svg>
+        <div class="milken-logo-text">MILKEN<br>INSTITUTE</div>
+      </div>
+    </div>
+    <div class="section-badge">جدول الزيارة</div>
+  </div>
+  <div class="section-badge-clear"></div>
+
+  <div class="green-bar" style="margin-bottom:0;">موجز جدول الاعمال</div>
+  <table>
+    <thead>
+      <tr>
+        <th>الوقت</th>
+        <th>النشاط</th>
+        <th>الموقع</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for day in data.agenda_days %}
+      <tr class="day-row">
+        <td colspan="3">{{ day.day_label }} | {{ day.date }}</td>
+      </tr>
+      {% for item in day.items %}
+      <tr>
+        <td style="white-space:nowrap;">{{ item.time }}</td>
+        <td style="text-align:right;">{{ item.activity }}</td>
+        <td>{{ item.location }}</td>
+      </tr>
+      {% endfor %}
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{# ══════════════════════════════════════════════ #}
+{# PAGE 6 — DELEGATION LIST                      #}
+{# ══════════════════════════════════════════════ #}
+<div class="page-break">
+  <div class="page-header">
+    <div class="logos-row">
+      <div class="logo-box">
+        <svg width="26" height="26" viewBox="0 0 28 28"><rect width="28" height="28" rx="3" fill="#1c3370"/><line x1="4" y1="14" x2="24" y2="14" stroke="white" stroke-width="2"/><line x1="14" y1="4" x2="14" y2="24" stroke="white" stroke-width="2"/><circle cx="14" cy="14" r="7" fill="none" stroke="white" stroke-width="1.5"/></svg>
+        <div class="milken-logo-text">MILKEN<br>INSTITUTE</div>
+      </div>
+    </div>
+    <div class="section-badge">المعلومات الأساسية للزيارة</div>
+  </div>
+  <div class="section-badge-clear"></div>
+
+  <div class="green-bar" style="margin-bottom:0;">قائمة الوفد المشارك بالزيارة
+    <span style="float:left;">&#128101;</span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th style="width:30px;">#</th>
+        <th>الاسم</th>
+        <th>المنصب</th>
+        <th>القطاع / الإدارة</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for member in data.delegation %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td style="text-align:right;">{{ member.name }}</td>
+        <td>{{ member.title }}</td>
+        <td>{{ member.department }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{# ══════════════════════════════════════════════ #}
+{# PAGE 7 — MILKEN SECTION DIVIDER               #}
+{# ══════════════════════════════════════════════ #}
+<div class="page-break" style="min-height:247mm;background:linear-gradient(180deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 -15mm;padding:40px;">
+  <div style="background:rgba(255,255,255,0.95);padding:16px 30px;border-radius:6px;display:inline-flex;align-items:center;gap:14px;margin-bottom:30px;">
+    <svg width="36" height="36" viewBox="0 0 36 36"><rect width="36" height="36" rx="5" fill="#1c3370"/><line x1="6" y1="18" x2="30" y2="18" stroke="white" stroke-width="2.5"/><line x1="18" y1="6" x2="18" y2="30" stroke="white" stroke-width="2.5"/><circle cx="18" cy="18" r="9" fill="none" stroke="white" stroke-width="2"/></svg>
+    <div style="font-family:Arial;font-size:12pt;font-weight:800;color:#1c3370;line-height:1.4;">MILKEN INSTITUTE<br>GLOBAL CONFERENCE<br>2025</div>
+  </div>
+  <div style="color:white;font-size:18pt;font-weight:800;text-align:center;line-height:1.6;">
+    Milken Institute Global Conference 2025
+    <br>
+    <span style="font-size:13pt;font-weight:400;">(LA) - The United States of America (USA)</span>
+  </div>
+</div>
+
+{# ══════════════════════════════════════════════ #}
+{# PAGE 8 — CONFERENCE DATA                      #}
+{# ══════════════════════════════════════════════ #}
+<div class="page-break">
+  <div class="page-header">
+    <div class="logos-row">
+      <div class="logo-box">
+        <svg width="26" height="26" viewBox="0 0 28 28"><rect width="28" height="28" rx="3" fill="#1c3370"/><line x1="4" y1="14" x2="24" y2="14" stroke="white" stroke-width="2"/><line x1="14" y1="4" x2="14" y2="24" stroke="white" stroke-width="2"/><circle cx="14" cy="14" r="7" fill="none" stroke="white" stroke-width="1.5"/></svg>
+        <div class="milken-logo-text">MILKEN<br>INSTITUTE</div>
+      </div>
+    </div>
+    <div class="section-badge">بيانات المؤتمر</div>
+  </div>
+  <div class="section-badge-clear"></div>
+
+  <!-- Header row: المسؤول / الحدث / شعار المنظمة -->
+  <table style="margin-bottom:10px;">
+    <thead>
+      <tr>
+        <th>المسؤول</th>
+        <th>الحدث</th>
+        <th>شعار المنظمة</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <div style="width:60px;height:70px;background:#ddd;margin:0 auto 5px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:7pt;color:#555;">صورة</div>
+          <div style="font-size:8.5pt;">{{ data.conference_responsible }}</div>
+          <div style="font-size:7.5pt;color:#555;">{{ data.conference_responsible_title }}</div>
+        </td>
+        <td style="font-weight:700;font-size:10pt;">مؤتمر معهد ميلكن الأمريكى 2025 م</td>
+        <td>
+          <div style="display:inline-flex;align-items:center;gap:8px;border:1px solid #ddd;padding:8px;border-radius:3px;">
+            <svg width="30" height="30" viewBox="0 0 36 36"><rect width="36" height="36" rx="5" fill="#1c3370"/><line x1="6" y1="18" x2="30" y2="18" stroke="white" stroke-width="2.5"/><line x1="18" y1="6" x2="18" y2="30" stroke="white" stroke-width="2.5"/><circle cx="18" cy="18" r="9" fill="none" stroke="white" stroke-width="2"/></svg>
+            <span style="font-size:8pt;font-weight:700;color:#1c3370;">MILKEN<br>INSTITUTE</span>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="green-bar">نظرة عامة</div>
+  <div style="border:1px solid #ddd;padding:10px;font-size:9pt;line-height:1.8;background:white;">
+    {{ data.conference_overview }}
+  </div>
+
+  <div style="margin-top:10px;background:#f8f9fa;border:1px solid #ddd;padding:10px;font-size:9pt;line-height:1.9;">
+    <div style="font-size:10pt;font-weight:700;color:#1c3370;margin-bottom:6px;">تنطلق فعاليات 2025 تحت شعار:</div>
+    <ul class="bullet-list">
+      <li>{{ data.conference_slogan }}</li>
+      <li>{{ data.conference_dates }}</li>
+    </ul>
+    <div style="font-size:10pt;font-weight:700;color:#1c3370;margin:8px 0 6px;">أبرز المعلومات عن المؤتمر:</div>
+    <ul class="bullet-list">
+      <li>يُنظَم من قبل معهد ميلكن (Milken Institute) وهو مؤسسة فكرية غير ربحية مقرها الولايات المتحدة.</li>
+      <li>يحضر المؤتمر {{ data.conference_participants }}</li>
+      <li>يضم {{ data.conference_speakers_count }}</li>
+      <li>يشارك فيه قادة دول ورؤساء تنفيذيون ووزراء وخبراء دوليين.</li>
+    </ul>
+  </div>
+</div>
+
+{# ══════════════════════════════════════════════ #}
+{# PAGE 9 — CONFERENCE MAIN TRACKS               #}
+{# ══════════════════════════════════════════════ #}
+<div class="page-break">
+  <div class="page-header">
+    <div class="logos-row">
+      <div class="logo-box">
+        <svg width="26" height="26" viewBox="0 0 28 28"><rect width="28" height="28" rx="3" fill="#1c3370"/><line x1="4" y1="14" x2="24" y2="14" stroke="white" stroke-width="2"/><line x1="14" y1="4" x2="14" y2="24" stroke="white" stroke-width="2"/><circle cx="14" cy="14" r="7" fill="none" stroke="white" stroke-width="1.5"/></svg>
+        <div class="milken-logo-text">MILKEN<br>INSTITUTE</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="green-bar">المحاور الرئيسية للمؤتمر</div>
+  <table>
+    <tbody>
+      {% for track in data.conference_tracks %}
+      <tr>
+        <td style="text-align:right;">{{ track }}</td>
+        <td style="width:40px;text-align:center;font-weight:700;color:#1c3370;">{{ forloop.counter }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{# ══════════════════════════════════════════════ #}
+{# PAGE 10 — PREVIOUS CONFERENCE OUTCOMES        #}
+{# ══════════════════════════════════════════════ #}
+<div class="page-break">
+  <div class="page-header">
+    <div class="logos-row">
+      <div class="logo-box">
+        <svg width="26" height="26" viewBox="0 0 28 28"><rect width="28" height="28" rx="3" fill="#1c3370"/><line x1="4" y1="14" x2="24" y2="14" stroke="white" stroke-width="2"/><line x1="14" y1="4" x2="14" y2="24" stroke="white" stroke-width="2"/><circle cx="14" cy="14" r="7" fill="none" stroke="white" stroke-width="1.5"/></svg>
+        <div class="milken-logo-text">MILKEN<br>INSTITUTE</div>
+      </div>
+    </div>
+    <div class="section-badge">مخرجات المؤتمرات السابقة</div>
+  </div>
+  <div class="section-badge-clear"></div>
+
+  <div style="display:flex;gap:12px;">
+    <div style="flex:3;">
+      <div class="outcome-section-title">مؤتمر معهد ميلكن العالمي 2023:</div>
+      <ul class="bullet-list">
+        {% for item in data.prev_2023_outcomes %}<li>{{ item }}</li>{% endfor %}
+      </ul>
+      <div class="outcome-section-title">مؤتمر معهد ميلكن العالمي 2024:</div>
+      <ul class="bullet-list">
+        {% for item in data.prev_2024_outcomes %}<li>{{ item }}</li>{% endfor %}
+      </ul>
+
+      <div class="section-badge" style="margin-top:12px;float:none;display:block;width:fit-content;">مشاركات المملكة في مؤتمر ميلكن</div>
+      <div class="outcome-section-title">مؤتمر 2023:</div>
+      <ul class="bullet-list">
+        {% for item in data.ksa_participation_2023 %}<li>{{ item }}</li>{% endfor %}
+      </ul>
+      <div class="outcome-section-title">مؤتمر 2024:</div>
+      <ul class="bullet-list">
+        {% for item in data.ksa_participation_2024 %}<li>{{ item }}</li>{% endfor %}
+      </ul>
+    </div>
+    <div style="flex:2;">
+      <!-- Conference photo placeholder -->
+      <div style="width:100%;height:160px;background:linear-gradient(135deg,#1c3370,#3a5fa0);border-radius:5px;display:flex;align-items:center;justify-content:center;color:white;font-size:9pt;text-align:center;">
+        صورة من مؤتمر<br>ميلكن 2021
+      </div>
+    </div>
+  </div>
+</div>
+
+{# ══════════════════════════════════════════════ #}
+{# PAGE 11 — SESSIONS AGENDA SECTION DIVIDER     #}
+{# ══════════════════════════════════════════════ #}
+<div class="page-break" style="background:#f0f4fa;border:2px solid #1c3370;min-height:60mm;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;">
+  <div class="blue-bar" style="font-size:12pt;border-radius:4px;padding:10px 20px;">Agenda of Sessions for H.E</div>
+</div>
+
+{# ══════════════════════════════════════════════ #}
+{# PAGE 12 — SESSION AGENDA DAY 1                #}
+{# ══════════════════════════════════════════════ #}
+<div class="page-break">
+  <div class="section-badge" style="float:left;">Agenda of Sessions for H.E</div>
+  <div class="section-badge-clear"></div>
+
+  <div class="blue-bar">Agenda of the Milken Institute Global Conference – Day 1 – May 4, 2025</div>
+  <table class="session-table">
+    <thead>
+      <tr>
+        <th>Time</th>
+        <th>Session Title</th>
+        <th>Type of Participation H.E</th>
+        <th>Speaker\Owner</th>
+        <th>Place</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>13:30-12:30</td>
+        <td>Leaders in Health</td>
+        <td>attending</td>
+        <td style="text-align:right;font-size:8pt;">Moderator: Esther Krofah<br>Executive Vice President, Milken Institute Health</td>
+        <td rowspan="2" style="vertical-align:middle;">The Beverly Hilton Hotel</td>
+      </tr>
+      <tr>
+        <td>14:30-12:30</td>
+        <td class="highlight-cell">invitation-only session and H.E the CEO has expressed interest in attending</td>
+        <td>attending</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td rowspan="6">15:00-17:00</td>
+        <td colspan="3" style="text-align:right;font-size:9pt;background:#e8f0e8;">غداء عمل \ عشاء ورشة عمل البيت السعودي</td>
+        <td rowspan="6">-</td>
+      </tr>
+      <tr>
+        <td style="text-align:right;font-size:8.5pt;">Opening remarks</td>
+        <td>attending</td>
+        <td style="font-size:8pt;">Ministry of Investment (5 min)</td>
+      </tr>
+      <tr>
+        <td style="text-align:right;font-size:8.5pt;">Success stories in clinical Research in KSA</td>
+        <td>attending</td>
+        <td style="font-size:8pt;">King Abdullah International Medical Research Center (10 min)</td>
+      </tr>
+      <tr>
+        <td style="text-align:right;font-size:8.5pt;">Dinner/Saudi House "Biotech and Medical Device Research in KSA"</td>
+        <td>Statement about "Biotech and Medical Device Research in KSA"</td>
+        <td style="font-size:8pt;">H.E Dr.Hisham Al jadhey-SFDA (10 min)</td>
+      </tr>
+      <tr>
+        <td style="text-align:right;font-size:8.5pt;">Clinical trials and Health provision practices</td>
+        <td>attending</td>
+        <td style="font-size:8pt;">King Faisal Specialist Hospital &amp; Research Centre (10 min)</td>
+      </tr>
+      <tr>
+        <td style="text-align:right;font-size:8.5pt;">Interaction session and Q&amp;A</td>
+        <td>attending</td>
+        <td style="font-size:8pt;">All (10 min)</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+{# ══════════════════════════════════════════════ #}
+{# PAGE 13 — SESSION AGENDA DAY 2 & DAY 3        #}
+{# ══════════════════════════════════════════════ #}
+<div class="page-break">
+  <div class="section-badge" style="float:left;">Agenda of Sessions for H.E</div>
+  <div class="section-badge-clear"></div>
+
+  <div class="blue-bar" style="background:#e07020;margin-bottom:0;">Agenda of the Milken Institute Global Conference – Day 2 – May 5, 2025</div>
+  <table class="session-table" style="margin-bottom:14px;">
+    <thead>
+      <tr>
+        <th>Time</th>
+        <th>Session Title</th>
+        <th>Type of Participation H.E</th>
+        <th>Speaker\owner</th>
+        <th>Place</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>16:00-9:00</td>
+        <td>Opening session</td>
+        <td>attending</td>
+        <td>-</td>
+        <td>The Beverly Hilton Hotel</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="blue-bar" style="margin-bottom:0;">Agenda of the Milken Institute Global Conference – Day 3 (Final Day) – May 6, 2025</div>
+  <table class="session-table">
+    <thead>
+      <tr>
+        <th>Time</th>
+        <th>Session Title</th>
+        <th>Type of Participation H.E</th>
+        <th>Speaker</th>
+        <th>Place</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>11:00-10:00</td>
+        <td>The Roadmap to Longevity</td>
+        <td>attending</td>
+        <td style="text-align:right;font-size:7.5pt;">
+          <strong>MODERATOR:</strong> Gadi Schwartz, Correspondent, NBC News<br>
+          <strong>SPEAKERS:</strong><br>
+          Dan Buettner – Founder, Blue Zones, LLC<br>
+          Laura Deming – CEO, Cradle<br>
+          Richard Isaacson – Director, Atria Precision Prevention Program<br>
+          Eric Verdin – CEO and President, Buck Institute for Research on Aging<br>
+          Vonda Wright – Orthopaedic Surgeon; Founder, Precision Longevity<br>
+          <strong>TRACKS:</strong> Health &amp; Medical Research
+        </td>
+        <td rowspan="2" style="vertical-align:middle;">The Beverly Hilton Hotel</td>
+      </tr>
+      <tr>
+        <td>14:00-13:00</td>
+        <td>Driving Investment into Health Innovations Investment (Invite Only)</td>
+        <td>attending</td>
+        <td style="text-align:right;font-size:7.5pt;">
+          <strong>MODERATOR:</strong> Caitlin MacLean, Managing Director, Milken Institute Finance<br>
+          <strong>SPEAKERS:</strong><br>
+          Marina Balobanova – Investment Officer, Private Equity, CalPERS<br>
+          Cam Black – Treasurer and CIO, Blue Cross Blue Shield of Arizona<br>
+          Mike Negussie – Investment Director, Children's Healthcare of Atlanta<br>
+          Scott Pittman – SVP and CIO, Mount Sinai Health System<br>
+          Jeanne Shen – CIO, Gavi, The Vaccine Alliance<br>
+          <strong>TRACKS:</strong> Financial Markets / Health &amp; Medical Research
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+{# ══════════════════════════════════════════════ #}
+{# PAGE 14 — SPEAKERS SECTION DIVIDER            #}
+{# ══════════════════════════════════════════════ #}
+<div class="page-break" style="background:#1c3370;min-height:247mm;display:flex;align-items:center;justify-content:center;margin:0 -15mm;padding:40px;">
+  <h2 style="color:white;font-size:26pt;font-weight:800;">المتحدثون</h2>
+</div>
+
+{# ══════════════════════════════════════════════ #}
+{# PAGE 15 — KEY SPEAKERS (opening/main)         #}
+{# ══════════════════════════════════════════════ #}
+<div class="page-break">
+  <div class="section-badge" style="float:left;">المتحدثون</div>
+  <div class="section-badge-clear"></div>
+
+  <div class="green-bar">أبرز المتحدثين المتوقع مشاركتهم في الجلسات الافتتاحية أو الرئيسية</div>
+  <table>
+    <thead>
+      <tr>
+        <th>المتحدثون</th>
+        <th>رابط السيرة الذاتية</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for speaker in data.key_speakers %}
+      <tr>
+        <td style="text-align:right;">
+          <div style="display:flex;align-items:center;gap:10px;justify-content:flex-end;">
+            <div>
+              <div style="font-weight:700;font-size:9.5pt;">{{ speaker.name }}</div>
+              <div style="font-size:8.5pt;color:#555;">{{ speaker.role }}</div>
+            </div>
+            <div style="width:44px;height:50px;background:#ccc;border-radius:3px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:7pt;color:#666;">صورة</div>
+          </div>
+        </td>
+        <td style="font-size:7.5pt;color:#1c3370;word-break:break-all;">{{ speaker.linkedin_url }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div style="margin-top:8px;font-size:7.5pt;color:#e07020;text-decoration:underline;text-align:right;">
+    المصدر: World Leaders Join Prominent Experts in Business, Health, and Philanthropy to Discuss Pressing Global Issues at Milken Institute 2025 Global Conference
+  </div>
+</div>
+
+{# ══════════════════════════════════════════════ #}
+{# PAGE 16 — MORE SPEAKERS                       #}
+{# ══════════════════════════════════════════════ #}
+<div class="page-break">
+  <div class="section-badge" style="float:left;">المتحدثون</div>
+  <div class="section-badge-clear"></div>
+
+  <div class="speakers-grid">
+    {% set ext_speakers = [
+      {'name': 'Jeb Terry', 'role': 'President and CEO, Cosm'},
+      {'name': 'Khalid Al-Falih', 'role': 'Minister of Investment, Kingdom of Saudi Arabia'},
+      {'name': 'Abdullah bin Amer Alswaha', 'role': 'Minister of Communications and Information Technology, KSA'},
+      {'name': 'Nicole Bintner', 'role': 'Ambassador of the Grand Duchy of Luxembourg to the US'},
+      {'name': 'Tony Blair', 'role': 'Executive Chairman, The Tony Blair Institute for Global Change; Former PM of the UK'},
+      {'name': 'Juan Cortina Gallardo', 'role': 'Chairman and Executive President, Grupo Siembra'},
+      {'name': 'Mohammad Abunayyan', 'role': 'Chairman, Board of Directors, ACWA Power'},
+      {'name': 'Iván Duque Márquez', 'role': '33rd President of the Republic of Colombia'},
+    ] %}
+    {% for sp in ext_speakers %}
+    <div class="speaker-card">
+      <div class="speaker-photo">Photo</div>
+      <div class="speaker-name">{{ sp.name }}</div>
+      <div class="speaker-role">{{ sp.role }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{# ══════════════════════════════════════════════ #}
+{# PAGE 17 — MORE SPEAKERS (page 14)             #}
+{# ══════════════════════════════════════════════ #}
+<div class="page-break">
+  <div class="section-badge" style="float:left;">المتحدثون</div>
+  <div class="section-badge-clear"></div>
+
+  <div class="speakers-grid">
+    {% set ext_speakers2 = [
+      {'name': 'Jesse Ehrenfeld', 'role': 'President, American Medical Association'},
+      {'name': 'Peter Fernandez', 'role': 'CEO, Mombak and The Amazon Reforestation Fund'},
+      {'name': 'Mike Gitlin', 'role': 'President and CEO, Capital Group'},
+      {'name': 'Elon Musk', 'role': 'Founder and CEO, Tesla'},
+      {'name': 'Nadine Gracia', 'role': "President and CEO, Trust for America's Health"},
+      {'name': 'Poppy Gustafsson', 'role': 'Minister for Investment, United Kingdom'},
+      {'name': 'Sandra Hernandez', 'role': 'President and CEO, California Health Care Foundation'},
+      {'name': 'Peter Mandelson', 'role': 'Ambassador of Britain to the US'},
+    ] %}
+    {% for sp in ext_speakers2 %}
+    <div class="speaker-card">
+      <div class="speaker-photo">Photo</div>
+      <div class="speaker-name">{{ sp.name }}</div>
+      <div class="speaker-role">{{ sp.role }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{# ══════════════════════════════════════════════ #}
+{# PAGE 18 — BILATERAL MEETINGS SECTION DIVIDER  #}
+{# ══════════════════════════════════════════════ #}
+<div class="page-break" style="background:#1c3370;min-height:247mm;display:flex;align-items:center;justify-content:center;margin:0 -15mm;padding:40px;">
+  <h2 style="color:white;font-size:22pt;font-weight:800;text-align:center;line-height:1.6;">اللقاءات الثنائية ونقاط الحديث</h2>
+</div>
+
+{# ══════════════════════════════════════════════ #}
+{# PAGE 19 — BILATERAL MEETINGS LIST             #}
+{# ══════════════════════════════════════════════ #}
+<div class="page-break">
+  <div class="section-badge" style="float:left;">اللقاءات الثنائية</div>
+  <div class="section-badge-clear"></div>
+
+  <div class="green-bar">قائمة الحضور</div>
+  <table>
+    <thead>
+      <tr>
+        <th>الهيئة</th>
+        <th>الجانب النظير</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="text-align:right;vertical-align:top;padding:10px;">
+          <ol style="padding-right:18px;line-height:2;font-size:9.5pt;">
+            <li>معالي الرئيس التنفيذي الدكتور/ هشام بن سعد الجضعي.</li>
+            <li>سعادة مساعد الرئيس لقطاع الشؤون التنفيذية الأستاذة/ الآء بنت فؤاد سندي.</li>
+          </ol>
+        </td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+{# ══════════════════════════════════════════════ #}
+{# PAGE 20 — BILATERAL MEETING DETAILS           #}
+{# ══════════════════════════════════════════════ #}
+<div class="page-break">
+  <div class="section-badge" style="float:left;">اللقاءات الثنائية</div>
+  <div class="section-badge-clear"></div>
+
+  {% for meeting in data.bilateral_meetings %}
+  <div class="no-break" style="margin-bottom:16px;">
+    <table style="margin-bottom:0;">
+      <thead>
+        <tr>
+          <th>الجهة</th>
+          <th>الطرف النظير</th>
+          <th>التفاصيل</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ meeting.entity }}</td>
+          <td>{{ meeting.counterpart }}</td>
+          <td style="font-size:8.5pt;text-align:right;">
+            {% if meeting.date %}<div>• <strong>التاريخ:</strong> {{ meeting.date }}</div>{% endif %}
+            {% if meeting.time %}<div>• <strong>الوقت:</strong> {{ meeting.time }}</div>{% endif %}
+            {% if meeting.location %}<div>• <strong>الموقع:</strong> {{ meeting.location }}</div>{% endif %}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    {% if meeting.talking_points %}
+    <div style="border:1px solid #ddd;border-top:none;padding:8px 12px;background:#fafafa;">
+      <div class="green-bar" style="margin:0 0 6px 0;font-size:9pt;">اجندة الاجتماع ونقاط الحديث المقترحة</div>
+      <div class="talking-points">
+        <ul>
+          {% for point in meeting.talking_points %}
+          <li {% if forloop.first %}class="underline"{% endif %}>{{ point }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+
+{# ══════════════════════════════════════════════ #}
+{# PAGE 21 — CONSULATE SECTION DIVIDER           #}
+{# ══════════════════════════════════════════════ #}
+<div class="page-break" style="background:#1c3370;min-height:247mm;display:flex;align-items:center;justify-content:center;margin:0 -15mm;padding:40px;">
+  <h2 style="color:white;font-size:22pt;font-weight:800;text-align:center;line-height:1.6;">قنصلية المملكة العربية السعودية في مدينة لوس انجلوس</h2>
+</div>
+
+{# ══════════════════════════════════════════════ #}
+{# PAGE 22 — CONSULATE DATA                      #}
+{# ══════════════════════════════════════════════ #}
+<div class="page-break">
+  <div class="section-badge" style="float:left;">قنصلية المملكة العربية السعودية في مدينة لوس انجلوس</div>
+  <div class="section-badge-clear"></div>
+
+  <div class="blue-bar" style="margin-bottom:0;">بيانات القنصلية</div>
+  <div style="border:1px solid #ddd;border-top:none;padding:12px;display:flex;gap:16px;align-items:flex-start;">
+    <div style="flex:1;font-size:9pt;line-height:2;">
+      <div>• <strong>رقم الهاتف:</strong> {{ data.consulate_phone }}</div>
+      <div>• <strong>البريد الإلكتروني:</strong> {{ data.consulate_email }}</div>
+      <div>• <strong>ساعات العمل:</strong> {{ data.consulate_hours }}</div>
+      <div>• <strong>أيام العطلة:</strong> {{ data.consulate_holidays }}</div>
+      <div>• <strong>العنوان:</strong> {{ data.consulate_address }}</div>
+    </div>
+    <div style="width:100px;text-align:center;">
+      <div style="width:90px;height:70px;background:#ccc;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:7pt;color:#555;">صورة المبنى</div>
+      <div style="font-size:7.5pt;margin-top:3px;">قنصلية المملكة العربية السعودية في لوس أنجلوس</div>
+    </div>
+  </div>
+
+  <div class="green-bar" style="margin-top:12px;">القنصل المُعين</div>
+  <table>
+    <thead>
+      <tr>
+        <th>القنصل المُعين</th>
+        <th>تاريخ التعيين</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <div style="display:flex;align-items:center;justify-content:center;gap:12px;">
+            <div style="width:60px;height:70px;background:#ccc;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:7pt;color:#555;">صورة</div>
+            <div>
+              <div style="font-weight:700;font-size:9.5pt;">{{ data.consul_general_name }}</div>
+              <div style="font-size:8.5pt;color:#555;">{{ data.consul_general_title }}</div>
+            </div>
+          </div>
+        </td>
+        <td>
+          <ul style="padding-right:16px;font-size:9pt;list-style:disc;">
+            <li>{{ data.consul_appointment_since }}</li>
+          </ul>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+{# ══════════════════════════════════════════════ #}
+{# PAGE 23 — CONSULATE BIO                       #}
+{# ══════════════════════════════════════════════ #}
+<div class="page-break">
+  <div class="section-badge" style="float:left;">قنصلية المملكة العربية السعودية ولاية لوس أنجلوس</div>
+  <div class="section-badge-clear"></div>
+
+  <div class="green-bar">السيرة الذاتية</div>
+  <div class="blue-bar" style="border-radius:0;margin:0;font-size:9pt;">المعلومات الشخصية</div>
+  <div style="border:1px solid #ddd;border-top:none;padding:10px;display:flex;align-items:center;gap:14px;">
+    <div style="width:70px;height:80px;background:#ccc;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:7pt;color:#555;">صورة</div>
+    <div><strong>سعادة القنصل الأستاذ/ بندر بن فهد الزيد</strong></div>
+  </div>
+
+  <div style="background:#e07020;color:white;padding:7px 12px;font-weight:700;font-size:10pt;margin-top:10px;border-radius:3px 3px 0 0;">الخبرات المهنية</div>
+  <div style="border:1px solid #ddd;border-top:none;padding:12px;font-size:9pt;">
+    <div style="font-weight:700;color:#1c3370;margin-bottom:6px;">المؤهل العلمي:</div>
+    <ul class="bullet-list">
+      <li>بكالوريوس العلوم السياسية - جامعة الملك سعود 1417-1421ه.</li>
+      <li>دبلوم معهد الدراسات الدبلوماسية.</li>
+      <li>شهادة دراسات عليا في العلوم السياسة من بيركبيك جامعة لندن.</li>
+    </ul>
+    <div style="font-weight:700;color:#1c3370;margin:8px 0 4px;">خبراته:</div>
+    <ul class="bullet-list">
+      <li>المدير العام لمكتب الوزير المكلف لشؤون الدول الإفريقية 2020-2022م.</li>
+      <li>مدير عام مكتب نائب وزير الخارجية 2022 – 2023.</li>
+      <li>قنصل عام المملكة العربية السعودية في لوس أنجلوس – 2023 - حتى الآن.</li>
+    </ul>
+  </div>
+</div>
+
+{# ══════════════════════════════════════════════ #}
+{# PAGE 24 — WEATHER & PRAYER TIMES              #}
+{# ══════════════════════════════════════════════ #}
+<div class="page-break">
+  <div class="section-badge" style="float:left;">الطقس ومواقيت الصلاة في ولاية لوس أنجلوس</div>
+  <div class="section-badge-clear"></div>
+
+  <div class="blue-bar" style="margin-bottom:0;">حالة الطقس</div>
+  <div style="border:1px solid #ddd;border-top:none;padding:12px;">
+    <div class="weather-row">
+      {% for wd in data.weather_days %}
+      <div class="weather-day">
+        <div class="weather-day-num">{{ wd.day }}</div>
+        <div class="weather-icon">⛅</div>
+        <div class="weather-high">{{ wd.high }}</div>
+        <div class="weather-low">{{ wd.low }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="blue-bar" style="margin-top:14px;margin-bottom:0;background:#1c3370;">مواقيت الصلاة</div>
+  <table class="prayer-header">
+    <thead>
+      <tr>
+        <th style="background:#28a745;">التاريخ</th>
+        <th style="background:#28a745;">اليوم</th>
+        <th style="background:#28a745;">الفجر</th>
+        <th style="background:#28a745;">الشروق</th>
+        <th style="background:#28a745;">الظهر</th>
+        <th style="background:#28a745;">العصر</th>
+        <th style="background:#28a745;">المغرب</th>
+        <th style="background:#28a745;">العشاء</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for pt in data.prayer_times %}
+      <tr>
+        <td>{{ pt.date }}</td>
+        <td>{{ pt.day }}</td>
+        <td>{{ pt.fajr }}</td>
+        <td>{{ pt.shurooq }}</td>
+        <td>{{ pt.dhuhr }}</td>
+        <td>{{ pt.asr }}</td>
+        <td>{{ pt.maghrib }}</td>
+        <td>{{ pt.isha }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{# ══════════════════════════════════════════════ #}
+{# PAGE 25 — ATTACHMENTS                         #}
+{# ══════════════════════════════════════════════ #}
+<div>
+  <div class="section-badge" style="float:left;">المرفقات</div>
+  <div class="section-badge-clear"></div>
+
+  <div class="blue-bar" style="margin-bottom:0;">المرفقات</div>
+  <div style="border:1px solid #ddd;border-top:none;padding:14px;background:white;">
+    <ul class="bullet-list">
+      <li>Saudi Officials MILKEN PARTICIPATION.</li>
+      <li>Milken Institute Global conference 2025 brochure.</li>
+    </ul>
+  </div>
+</div>
+
+</body>
+</html>

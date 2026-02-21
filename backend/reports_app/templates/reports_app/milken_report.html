@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>{{ report.title }}</title>
+<style>
+@font-face { font-family:'NA'; src:url('/usr/share/fonts/truetype/noto/NotoSansArabic-Regular.ttf');  font-weight:400; }
+@font-face { font-family:'NA'; src:url('/usr/share/fonts/truetype/noto/NotoSansArabic-Medium.ttf');   font-weight:500; }
+@font-face { font-family:'NA'; src:url('/usr/share/fonts/truetype/noto/NotoSansArabic-SemiBold.ttf'); font-weight:600; }
+@font-face { font-family:'NA'; src:url('/usr/share/fonts/truetype/noto/NotoSansArabic-Bold.ttf');     font-weight:700; }
+@font-face { font-family:'NA'; src:url('/usr/share/fonts/truetype/noto/NotoSansArabic-Black.ttf');    font-weight:900; }
+
+@page { size:A4; margin:0; }
+@page content {
+  size:A4; margin:20mm 16mm 16mm 16mm;
+  @top-right   { content:"الهيئة العامة للغذاء والدواء"; font-family:'NA',sans-serif; font-size:7pt; color:#94a3b8; }
+  @bottom-center { content:counter(page); font-family:'NA',sans-serif; font-size:7.5pt; color:#94a3b8; }
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:'NA',Arial,sans-serif; font-size:10pt; color:#1e293b; line-height:1.6; direction:rtl; }
+.page-break  { page-break-after:always; }
+.avoid-break { page-break-inside:avoid; }
+.content-page { page:content; }
+.ltr { direction:ltr; display:inline; unicode-bidi:embed; }
+.mb4 { margin-bottom:4mm; }
+.mb6 { margin-bottom:6mm; }
+.mb8 { margin-bottom:8mm; }
+
+/* ═══ COVER PAGE ═══ */
+.cover-page { width:210mm; height:297mm; background:#0e1628; page-break-after:always; position:relative; overflow:hidden; }
+
+/* Fiber-optic decorative lines (Milken brand) */
+.fiber-lines { position:absolute; top:0; right:0; width:55%; height:100%; overflow:hidden; }
+.fiber-line {
+  position:absolute; top:0; right:0;
+  width:2px; height:100%;
+  background:linear-gradient(180deg, transparent 0%, rgba(147,51,234,0.8) 30%, rgba(236,72,153,0.9) 60%, rgba(168,85,247,0.6) 80%, transparent 100%);
+  transform-origin:top center;
+}
+.fl1  { right:8%;  transform:rotate(-15deg); opacity:0.9; }
+.fl2  { right:12%; transform:rotate(-20deg); opacity:0.7; background:linear-gradient(180deg, transparent, rgba(99,102,241,0.8) 40%, rgba(147,51,234,0.9) 70%, transparent); }
+.fl3  { right:17%; transform:rotate(-25deg); opacity:0.6; }
+.fl4  { right:22%; transform:rotate(-30deg); opacity:0.8; background:linear-gradient(180deg, transparent, rgba(236,72,153,0.7) 50%, rgba(251,113,133,0.8) 75%, transparent); }
+.fl5  { right:6%;  transform:rotate(-10deg); opacity:0.5; }
+.fl6  { right:28%; transform:rotate(-35deg); opacity:0.7; }
+.fl7  { right:33%; transform:rotate(-38deg); opacity:0.4; }
+.fl8  { right:3%;  transform:rotate(-8deg);  opacity:0.6; background:linear-gradient(180deg, transparent, rgba(139,92,246,0.9) 45%, rgba(167,139,250,0.7) 65%, transparent); }
+.fl9  { right:40%; transform:rotate(-42deg); opacity:0.3; }
+.fl10 { right:45%; transform:rotate(-45deg); opacity:0.5; }
+/* Glowing dots at line ends */
+.dot { position:absolute; width:6px; height:6px; border-radius:50%; background:white; box-shadow:0 0 8px 3px rgba(255,255,255,0.8); }
+
+/* Left content area */
+.cover-left { position:absolute; top:0; left:0; width:55%; height:100%; padding:18mm 10mm 18mm 18mm; display:flex; flex-direction:column; justify-content:space-between; }
+
+/* SFDA badge */
+.sfda-badge { display:inline-flex; align-items:center; gap:8px; margin-bottom:8mm; }
+.sfda-badge-icon { width:36px; height:36px; background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.25); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:16pt; }
+.sfda-badge-text { color:rgba(255,255,255,0.85); font-size:8pt; font-weight:600; }
+
+.cover-content { flex:1; display:flex; flex-direction:column; justify-content:center; }
+
+/* Milken-style event title on cover */
+.cover-dates { color:rgba(255,255,255,0.65); font-size:9pt; font-weight:500; margin-bottom:3mm; letter-spacing:0.05em; }
+.cover-event-title { color:white; font-size:24pt; font-weight:900; line-height:1.2; margin-bottom:4mm; }
+.cover-slogan { color:rgba(255,255,255,0.85); font-size:11pt; font-weight:600; margin-bottom:8mm; }
+.cover-tagline { color:rgba(255,255,255,0.6); font-size:9pt; line-height:1.5; margin-bottom:8mm; max-width:85mm; }
+
+.cover-divider { width:48mm; height:2px; background:linear-gradient(90deg,#6366f1,#a855f7,#ec4899); margin-bottom:8mm; margin-right:0; }
+
+.cover-meta-row { display:flex; align-items:center; gap:8px; margin-bottom:4mm; }
+.cover-meta-icon { width:22px; height:22px; background:rgba(255,255,255,0.1); border-radius:5px; display:flex; align-items:center; justify-content:center; font-size:10pt; flex-shrink:0; }
+.cover-meta-text { color:rgba(255,255,255,0.85); font-size:9pt; }
+
+.cover-footer-row { display:flex; align-items:center; justify-content:space-between; }
+.cover-confidential { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); border-radius:20px; padding:4px 14px; color:rgba(255,255,255,0.7); font-size:7.5pt; font-weight:600; }
+.cover-year { color:rgba(255,255,255,0.45); font-size:7.5pt; }
+
+/* ═══ SECTION DIVIDER PAGES ═══ */
+.section-divider { width:210mm; height:297mm; background:#0e1628; page-break-after:always; position:relative; overflow:hidden; }
+.sdiv-fiber { position:absolute; top:0; right:0; width:100%; height:100%; }
+.sdiv-line { position:absolute; top:0; width:2px; height:100%; opacity:0.4; }
+.sdiv-l1 { right:15%; background:linear-gradient(180deg,transparent,#a855f7 40%,#ec4899 70%,transparent); }
+.sdiv-l2 { right:30%; background:linear-gradient(180deg,transparent,#6366f1 45%,#a855f7 75%,transparent); }
+.sdiv-l3 { right:55%; background:linear-gradient(180deg,transparent,#ec4899 35%,#f43f5e 65%,transparent); opacity:0.3; }
+.sdiv-center { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; padding:0 25mm; width:100%; }
+.sdiv-icon { font-size:32pt; margin-bottom:6mm; display:block; }
+.sdiv-title { color:white; font-size:28pt; font-weight:900; line-height:1.2; margin-bottom:4mm; }
+.sdiv-subtitle { color:rgba(255,255,255,0.6); font-size:11pt; }
+.sdiv-line-dec { width:60px; height:3px; background:linear-gradient(90deg,#6366f1,#a855f7,#ec4899); margin:5mm auto; border-radius:2px; }
+
+/* ═══ CONTENT PAGE ELEMENTS ═══ */
+/* Page header bar */
+.page-header { background:#1c3370; color:white; padding:8px 14px; margin-bottom:7mm; border-radius:4px; display:flex; align-items:center; gap:10px; }
+.page-header-icon { font-size:14pt; }
+.page-header-title { font-size:13pt; font-weight:700; }
+
+/* Section header (inline heading within page) */
+.sec-head { background:linear-gradient(135deg,#1c3370,#1e40af); color:white; padding:7px 14px; border-radius:5px 5px 0 0; font-weight:700; font-size:10.5pt; margin-bottom:0; }
+.sec-body { border:1px solid #e2e8f0; border-top:none; padding:12px 14px; margin-bottom:6mm; border-radius:0 0 5px 5px; }
+
+/* Info box */
+.info-box { background:#f8fafc; border:1px solid #e2e8f0; border-right:3.5px solid #1c3370; border-radius:0 5px 5px 0; padding:10px 14px; margin-bottom:6mm; font-size:9.5pt; line-height:1.75; color:#334155; }
+.info-box.blue-accent { border-right-color:#3b82f6; }
+.info-box.purple-accent { border-right-color:#8b5cf6; }
+
+/* Two-column layout */
+.two-col { display:table; width:100%; table-layout:fixed; border-collapse:separate; border-spacing:4mm 0; }
+.two-col > .col { display:table-cell; vertical-align:top; width:50%; }
+
+/* Chip / stat cards */
+.chip-grid { display:table; width:100%; border-collapse:separate; border-spacing:3mm; }
+.chip-row  { display:table-row; }
+.chip { display:table-cell; background:white; border:1px solid #e8edf6; border-radius:7px; padding:9px 12px; vertical-align:middle; text-align:right; }
+.chip-label { font-size:7.5pt; color:#94a3b8; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; display:block; margin-bottom:2px; }
+.chip-value { font-size:10pt; font-weight:700; color:#1e3a5f; }
+
+/* Country info header */
+.country-header { background:#1c3370; color:white; padding:14px 18px; border-radius:8px; margin-bottom:5mm; display:table; width:100%; }
+.country-flag-cell { display:table-cell; width:60px; vertical-align:middle; font-size:28pt; text-align:center; }
+.country-info-cell { display:table-cell; vertical-align:middle; padding-right:10px; }
+.country-name-ar { font-size:15pt; font-weight:800; }
+.country-head  { font-size:9pt; color:rgba(255,255,255,0.75); margin-top:2px; }
+
+/* Agenda table */
+.agenda-table { width:100%; border-collapse:collapse; }
+.agenda-table th { background:#1c3370; color:white; padding:7px 10px; font-size:8.5pt; font-weight:700; text-align:right; }
+.agenda-table td { padding:7px 10px; border-bottom:1px solid #f1f5f9; font-size:9pt; vertical-align:middle; }
+.agenda-table tr:nth-child(even) td { background:#f8fafc; }
+.agenda-time { color:#1c3370; font-weight:700; font-size:9pt; white-space:nowrap; }
+.agenda-activity { color:#1e293b; }
+.agenda-location { color:#64748b; font-size:8pt; }
+
+/* Delegation table */
+.deleg-table { width:100%; border-collapse:collapse; }
+.deleg-table th { background:#1c3370; color:white; padding:8px 12px; font-size:8.5pt; font-weight:700; text-align:right; }
+.deleg-table td { padding:9px 12px; border-bottom:1px solid #edf2f7; font-size:9.5pt; vertical-align:middle; }
+.deleg-table tr:nth-child(even) td { background:#f8fafc; }
+.deleg-num { width:30px; color:#94a3b8; font-weight:700; font-size:9pt; text-align:center; }
+.deleg-name { font-weight:700; color:#1e3a5f; }
+.deleg-title { color:#475569; font-size:8.5pt; }
+.deleg-dept { color:#3b82f6; font-size:8pt; }
+
+/* Track grid */
+.track-grid { display:table; width:100%; border-collapse:separate; border-spacing:3mm; }
+.track-row  { display:table-row; }
+.track-cell { display:table-cell; width:50%; vertical-align:top; }
+.track-item { background:white; border:1px solid #e2e8f0; border-radius:8px; padding:9px 12px; display:flex; align-items:center; gap:10px; }
+.track-num { width:28px; height:28px; background:#1c3370; color:white; border-radius:50%; font-size:9pt; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; text-align:center; line-height:28px; }
+.track-text { font-size:9.5pt; color:#1e293b; font-weight:600; }
+
+/* Previous outcomes */
+.outcome-card { background:white; border:1px solid #e2e8f0; border-radius:8px; padding:11px 14px; margin-bottom:5mm; display:table; width:100%; page-break-inside:avoid; }
+.outcome-year { display:table-cell; width:60px; vertical-align:middle; }
+.outcome-year-badge { background:#1c3370; color:white; border-radius:6px; padding:6px 10px; font-size:11pt; font-weight:800; text-align:center; }
+.outcome-text { display:table-cell; vertical-align:middle; padding-right:12px; font-size:9.5pt; color:#334155; line-height:1.65; }
+
+/* Sessions */
+.session-day-header { background:#1c3370; color:white; padding:8px 14px; font-weight:700; font-size:10pt; margin-bottom:3mm; border-radius:5px; display:flex; align-items:center; gap:8px; }
+.session-item { background:white; border:1px solid #e2e8f0; border-right:3px solid #1c3370; padding:9px 12px; margin-bottom:3mm; border-radius:0 5px 5px 0; page-break-inside:avoid; }
+.session-time { color:#1c3370; font-weight:700; font-size:9pt; margin-bottom:3px; }
+.session-title { font-weight:700; color:#1e293b; font-size:10pt; margin-bottom:3px; }
+.session-speakers { color:#64748b; font-size:8.5pt; }
+.session-desc { color:#475569; font-size:8.5pt; margin-top:3px; line-height:1.5; }
+
+/* Speaker table */
+.spk-table { width:100%; border-collapse:collapse; }
+.spk-table th { background:#1c3370; color:white; padding:8px 10px; font-size:8.5pt; font-weight:700; text-align:right; }
+.spk-table td { padding:8px 10px; border-bottom:1px solid #edf2f7; font-size:9pt; vertical-align:middle; }
+.spk-table tr:nth-child(even) td { background:#f8fafc; }
+
+/* Speaker cards */
+.spk-cards-grid { display:table; width:100%; border-collapse:separate; border-spacing:4mm; }
+.spk-cards-row  { display:table-row; }
+.spk-cards-cell { display:table-cell; width:33.33%; vertical-align:top; }
+.spk-card { background:white; border:1px solid #e2e8f0; border-radius:10px; padding:12px; text-align:center; height:100%; page-break-inside:avoid; }
+.spk-avatar { width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 8px; font-size:18pt; font-weight:800; color:white; }
+.spk-name { font-weight:700; font-size:9.5pt; color:#1e3a5f; margin-bottom:2px; }
+.spk-title { font-size:8pt; color:#64748b; margin-bottom:2px; }
+.spk-org { font-size:7.5pt; color:#94a3b8; margin-bottom:4px; }
+.spk-country-badge { display:inline-block; background:#eff6ff; color:#1d4ed8; border-radius:10px; padding:2px 8px; font-size:7pt; font-weight:600; }
+
+/* Bilateral meetings */
+.mtg-card { background:white; border:1px solid #dbeafe; border-radius:10px; margin-bottom:6mm; overflow:hidden; page-break-inside:avoid; }
+.mtg-header { background:linear-gradient(135deg,#1c3370,#1e40af); color:white; padding:10px 14px; font-weight:700; font-size:10.5pt; display:flex; align-items:center; gap:8px; }
+.mtg-body { padding:12px 14px; }
+.mtg-meta { width:100%; border-collapse:collapse; margin-bottom:8px; }
+.mtg-meta td { padding:5px 8px; vertical-align:top; border-bottom:1px solid #f1f5f9; font-size:8.5pt; }
+.meta-label { font-size:7.5pt; color:#94a3b8; font-weight:600; text-transform:uppercase; }
+.meta-value { font-weight:600; color:#1e293b; }
+.tp-header { font-weight:700; color:#1e3a5f; font-size:9pt; margin-bottom:5px; }
+.tp-row { display:flex; align-items:flex-start; gap:8px; margin-bottom:4px; }
+.tp-num { width:20px; height:20px; background:#1c3370; color:white; border-radius:50%; font-size:8pt; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; line-height:20px; text-align:center; }
+.tp-text { font-size:9pt; color:#334155; line-height:1.5; }
+
+/* Embassy / Consulate */
+.contact-card { background:white; border:1px solid #e2e8f0; border-radius:10px; overflow:hidden; margin-bottom:5mm; }
+.contact-header { background:#1c3370; color:white; padding:10px 14px; font-weight:700; font-size:10.5pt; display:flex; align-items:center; gap:8px; }
+.contact-ambassador { background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; padding:10px 14px; margin:10px 14px; display:flex; align-items:center; gap:10px; }
+.amb-icon { font-size:22pt; }
+.amb-name { font-weight:800; font-size:10.5pt; color:#1c3370; }
+.amb-title { font-size:8.5pt; color:#475569; margin-top:2px; }
+.contact-table { width:100%; border-collapse:collapse; margin:0 14px; width:calc(100% - 28px); }
+.contact-table td { padding:7px 8px; border-bottom:1px solid #f8fafc; font-size:9pt; vertical-align:middle; }
+.ci { width:28px; text-align:center; font-size:12pt; color:#1c3370; }
+
+/* Weather */
+.wx-grid { display:table; width:100%; border-collapse:separate; border-spacing:3mm; }
+.wx-row  { display:table-row; }
+.wx-cell { display:table-cell; vertical-align:top; }
+.wx-card { background:white; border:1px solid #e2e8f0; border-radius:10px; padding:12px; text-align:center; }
+.wx-day  { font-size:8pt; color:#64748b; font-weight:600; margin-bottom:4px; }
+.wx-date { font-size:7.5pt; color:#94a3b8; margin-bottom:6px; }
+.wx-icon { font-size:22pt; margin-bottom:4px; display:block; }
+.wx-temp { font-size:14pt; font-weight:800; color:#1c3370; margin-bottom:4px; }
+.wx-detail { font-size:7.5pt; color:#64748b; }
+
+/* Prayer times */
+.prayer-table { width:100%; border-collapse:collapse; }
+.prayer-table th { background:#1c3370; color:white; padding:8px 10px; font-size:8.5pt; font-weight:700; text-align:center; }
+.prayer-table td { padding:8px 10px; border-bottom:1px solid #edf2f7; font-size:9.5pt; text-align:center; color:#1e293b; }
+.prayer-table tr:nth-child(even) td { background:#f8fafc; }
+.prayer-time { font-weight:700; color:#1c3370; }
+.prayer-day-col { text-align:right; font-weight:600; color:#334155; }
+
+/* Suggested meetings */
+.sug-card { background:white; border:1px solid #e2e8f0; border-radius:8px; padding:11px 14px; margin-bottom:4mm; page-break-inside:avoid; display:table; width:100%; }
+.sug-left { display:table-cell; vertical-align:middle; }
+.sug-right { display:table-cell; width:65px; vertical-align:middle; text-align:center; }
+.priority-badge { border-radius:12px; padding:3px 10px; font-size:8pt; font-weight:700; color:white; display:inline-block; }
+.p-high { background:#ef4444; }
+.p-med  { background:#f59e0b; }
+.p-low  { background:#22c55e; }
+.sug-entity { font-weight:700; color:#1c3370; font-size:10pt; margin-bottom:2px; }
+.sug-desc { font-size:9pt; color:#475569; }
+
+/* Talking points */
+.tp-list { }
+.tp-item { background:white; border:1px solid #e2e8f0; border-radius:7px; padding:9px 12px; margin-bottom:3mm; display:flex; align-items:flex-start; gap:10px; page-break-inside:avoid; }
+.tp-item-num { width:28px; height:28px; background:linear-gradient(135deg,#1c3370,#3b82f6); color:white; border-radius:7px; font-size:9pt; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; line-height:28px; text-align:center; }
+.tp-item-text { font-size:9.5pt; color:#1e293b; line-height:1.6; }
+
+/* Attachments */
+.attach-item { background:white; border:1px solid #e2e8f0; border-radius:8px; padding:10px 14px; margin-bottom:3mm; display:flex; align-items:center; gap:10px; page-break-inside:avoid; }
+.attach-icon { font-size:16pt; }
+.attach-name { font-size:9.5pt; color:#1e293b; font-weight:600; }
+
+/* TOC */
+.toc-row { display:flex; align-items:center; justify-content:space-between; padding:6px 10px; margin-bottom:3px; border-radius:5px; background:#f8fafc; }
+.toc-row:nth-child(odd) { background:#f1f5f9; }
+.toc-name { flex:1; color:#1e293b; font-size:9.5pt; padding-right:8px; }
+.toc-pg { color:#1c3370; font-weight:700; font-size:9pt; width:24px; text-align:center; background:#dbeafe; border-radius:4px; padding:1px 4px; }
+
+/* Executive summary highlight box */
+.exec-box { background:linear-gradient(135deg,#eff6ff,#f0fdf4); border:1px solid #bfdbfe; border-radius:10px; padding:14px 18px; margin-bottom:6mm; font-size:10pt; line-height:1.8; color:#1e293b; }
+
+/* Visit overview table */
+.ov-table { width:100%; border-collapse:collapse; }
+.ov-table td { padding:10px 14px; border-bottom:1px solid #edf2f7; vertical-align:middle; }
+.ov-label { color:#94a3b8; font-size:8pt; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; display:block; }
+.ov-value { font-weight:700; color:#1e293b; font-size:10pt; }
+.ov-table tr:nth-child(even) td { background:#f8fafc; }
+
+/* Visit objectives */
+.obj-item { background:white; border:1px solid #e2e8f0; border-radius:7px; padding:9px 12px; margin-bottom:3mm; display:flex; align-items:center; gap:10px; }
+.obj-num { width:26px; height:26px; background:#1c3370; color:white; border-radius:50%; font-size:9pt; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; line-height:26px; text-align:center; }
+.obj-text { font-size:9.5pt; color:#1e293b; }
+
+/* Intelligence text sections */
+.intel-section { margin-bottom:6mm; }
+.intel-title { font-size:10pt; font-weight:700; color:#1c3370; margin-bottom:3mm; padding-bottom:2mm; border-bottom:2px solid #dbeafe; display:flex; align-items:center; gap:6px; }
+.intel-body { font-size:9.5pt; color:#334155; line-height:1.8; }
+
+
+/* ═══ NEW BLUEPRINT FORMAT STYLES ═══ */
+/* Strategic Intelligence bullets */
+.intel-bullet-section { margin-bottom:5mm; }
+.intel-bullet-head { background:#1c3370; color:white; padding:6px 12px; font-weight:700; font-size:9.5pt; border-radius:5px; margin-bottom:3mm; }
+.intel-bullet-list { list-style:none; padding:0; margin:0; }
+.intel-bullet-list li { background:white; border:1px solid #e2e8f0; border-right:3px solid #1c3370; border-radius:0 6px 6px 0; padding:7px 12px; margin-bottom:3px; font-size:9.5pt; color:#334155; line-height:1.6; }
+.intel-bullet-list li::before { content:"◆ "; color:#1c3370; font-size:8pt; }
+
+/* Conference overview field table */
+.field-table { width:100%; border-collapse:collapse; margin-bottom:6mm; }
+.field-table tr:nth-child(even) td { background:#f8fafc; }
+.field-table td { padding:9px 14px; border-bottom:1px solid #edf2f7; vertical-align:top; }
+.field-label { width:35%; color:#64748b; font-size:8.5pt; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; }
+.field-value { font-size:9.5pt; color:#1e293b; font-weight:600; }
+
+/* Historical context cards */
+.hist-card { background:white; border:1px solid #e2e8f0; border-radius:8px; margin-bottom:5mm; overflow:hidden; page-break-inside:avoid; }
+.hist-year-bar { background:#1c3370; color:white; padding:6px 14px; font-weight:800; font-size:10pt; display:flex; align-items:center; gap:10px; }
+.hist-grid { width:100%; border-collapse:collapse; }
+.hist-grid td { padding:7px 12px; border-bottom:1px solid #f1f5f9; font-size:9pt; vertical-align:top; }
+.hist-field-label { width:30%; color:#94a3b8; font-size:8pt; font-weight:700; text-transform:uppercase; }
+.hist-field-value { color:#334155; line-height:1.6; }
+
+/* National Strategic Relevance structured bullets */
+.ns-block { background:white; border:1px solid #e2e8f0; border-radius:8px; margin-bottom:4mm; overflow:hidden; page-break-inside:avoid; }
+.ns-block-head { background:linear-gradient(135deg,#1c3370,#1e40af); color:white; padding:7px 14px; font-weight:700; font-size:9.5pt; display:flex; align-items:center; gap:8px; }
+.ns-block-body { padding:10px 14px; font-size:9.5pt; color:#334155; line-height:1.7; }
+
+/* Bilateral relations field table */
+.bil-table { width:100%; border-collapse:collapse; margin-bottom:6mm; }
+.bil-table tr:nth-child(even) td { background:#f8fafc; }
+.bil-table td { padding:10px 14px; border-bottom:1px solid #edf2f7; vertical-align:top; }
+.bil-label { width:30%; color:#64748b; font-size:8.5pt; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; }
+.bil-value { font-size:9.5pt; color:#1e293b; line-height:1.6; }
+
+/* Session impact structured card */
+.sim-card { background:white; border:1px solid #e2e8f0; border-radius:10px; margin-bottom:5mm; overflow:hidden; page-break-inside:avoid; }
+.sim-header { background:linear-gradient(135deg,#1c3370,#1e40af); color:white; padding:9px 14px; font-weight:700; font-size:10pt; }
+.sim-grid { width:100%; border-collapse:collapse; }
+.sim-grid td { padding:8px 12px; border-bottom:1px solid #f1f5f9; font-size:9pt; vertical-align:top; }
+.sim-label { width:28%; color:#64748b; font-size:8pt; font-weight:700; text-transform:uppercase; }
+.sim-value { color:#334155; line-height:1.6; }
+.sim-level-high { background:#dcfce7; color:#166534; }
+.sim-level-critical { background:#fee2e2; color:#991b1b; }
+.sim-level-medium { background:#fef9c3; color:#854d0e; }
+
+/* Bilateral meetings updated format */
+.mtg-field-row { display:flex; gap:8px; margin-bottom:3px; }
+.mtg-field-label { min-width:100px; color:#94a3b8; font-size:7.5pt; font-weight:700; text-transform:uppercase; flex-shrink:0; padding-top:1px; }
+.mtg-field-value { font-size:9pt; color:#1e293b; line-height:1.55; }
+.mtg-outcome { background:#f0fdf4; border:1px solid #bbf7d0; border-radius:5px; padding:6px 10px; margin-top:6px; font-size:8.5pt; color:#166534; }
+.mtg-objective { background:#eff6ff; border:1px solid #bfdbfe; border-radius:5px; padding:6px 10px; margin-top:4px; font-size:8.5pt; color:#1d4ed8; }
+
+/* Weather — pure table format */
+.wx-table { width:100%; border-collapse:collapse; margin-bottom:6mm; }
+.wx-table th { background:#1c3370; color:white; padding:8px 10px; font-size:8.5pt; font-weight:700; text-align:center; }
+.wx-table td { padding:9px 10px; border-bottom:1px solid #edf2f7; font-size:9pt; text-align:center; color:#1e293b; vertical-align:middle; }
+.wx-table tr:nth-child(even) td { background:#f8fafc; }
+.wx-temp-col { font-weight:700; color:#1c3370; }
+.wx-cond-col { font-size:8.5pt; color:#475569; }
+</style>
+</head>
+<body>
+<!-- ══════════════ COVER PAGE ══════════════ -->
+<div class="cover-page">
+  <div class="fiber-lines">
+    <div class="fiber-line fl1"></div><div class="fiber-line fl2"></div><div class="fiber-line fl3"></div>
+    <div class="fiber-line fl4"></div><div class="fiber-line fl5"></div><div class="fiber-line fl6"></div>
+    <div class="fiber-line fl7"></div><div class="fiber-line fl8"></div><div class="fiber-line fl9"></div>
+    <div class="fiber-line fl10"></div>
+  </div>
+  <div class="cover-left">
+    <div class="sfda-badge">
+      <div class="sfda-badge-icon">🏥</div>
+      <div class="sfda-badge-text">الهيئة العامة للغذاء والدواء<br><span style="color:rgba(255,255,255,0.55);font-weight:400">Saudi Food &amp; Drug Authority</span></div>
+    </div>
+    <div class="cover-content">
+      <div class="cover-dates ltr">{{ report.start_date }}{% if report.end_date and report.end_date != report.start_date %} – {{ report.end_date }}{% endif %}</div>
+      <div class="cover-event-title">{{ report.event_name }}</div>
+      {% if report.conference_data.slogan %}<div class="cover-slogan">{{ report.conference_data.slogan }}</div>{% endif %}
+      <div class="cover-divider"></div>
+      <div class="cover-meta-row"><div class="cover-meta-icon">📍</div><div class="cover-meta-text">{{ report.city }}{% if report.country %}, {{ report.country }}{% endif %}</div></div>
+      {% if report.venue %}<div class="cover-meta-row"><div class="cover-meta-icon">🏨</div><div class="cover-meta-text">{{ report.venue }}</div></div>{% endif %}
+      <div class="cover-meta-row"><div class="cover-meta-icon">👤</div><div class="cover-meta-text">{{ report.traveler_name }} — {{ report.traveler_title }}</div></div>
+      {% if report.conference_data.organizer %}<div class="cover-meta-row"><div class="cover-meta-icon">🏛</div><div class="cover-meta-text">{{ report.conference_data.organizer }}</div></div>{% endif %}
+    </div>
+    <div class="cover-footer-row">
+      <div class="cover-confidential">سري — للاستخدام الرسمي فقط</div>
+      <div class="cover-year">© SFDA 2026</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════ PAGE 2 — TABLE OF CONTENTS ══════════════ -->
+<div class="content-page page-break">
+  <div class="page-header"><div class="page-header-icon">📋</div><div class="page-header-title">فهرس المحتويات</div></div>
+  <div class="two-col">
+    <div class="col">{% for left, right in toc_pairs %}<div class="toc-row"><span class="toc-name">{{ left.title }}</span><span class="toc-pg">{{ left.page }}</span></div>{% endfor %}</div>
+    <div class="col">{% for left, right in toc_pairs %}{% if right %}<div class="toc-row"><span class="toc-name">{{ right.title }}</span><span class="toc-pg">{{ right.page }}</span></div>{% endif %}{% endfor %}</div>
+  </div>
+</div>
+
+
+<!-- ══════════════ §1 — VISIT OVERVIEW ══════════════ -->
+<div class="content-page page-break">
+  <div class="page-header"><div class="page-header-icon">🎯</div><div class="page-header-title">نظرة عامة على الزيارة</div></div>
+  <table class="ov-table mb8">
+    <tr><td><span class="ov-label">الفعالية</span><span class="ov-value">{{ report.event_name }}</span></td><td><span class="ov-label">الموقع</span><span class="ov-value">{{ report.city }}{% if report.country %}, {{ report.country }}{% endif %}</span></td></tr>
+    <tr><td><span class="ov-label">المقر</span><span class="ov-value">{{ report.venue|default:"—" }}</span></td><td><span class="ov-label">التواريخ</span><span class="ov-value ltr">{{ report.start_date }}{% if report.end_date and report.end_date != report.start_date %} – {{ report.end_date }}{% endif %}</span></td></tr>
+    <tr><td><span class="ov-label">رئيس الوفد</span><span class="ov-value">{{ report.traveler_name }}</span></td><td><span class="ov-label">الصفة الوظيفية</span><span class="ov-value">{{ report.traveler_title }}</span></td></tr>
+  </table>
+  {% if report.visit_objectives %}
+  <div class="sec-head">🎯 أهداف الزيارة</div>
+  <div class="sec-body">
+    {% for obj in report.visit_objectives %}
+    <div class="obj-item"><div class="obj-num">{{ forloop.counter }}</div><div class="obj-text">{{ obj }}</div></div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+
+
+<!-- ══════════════ §2 — EXECUTIVE STRATEGIC SUMMARY ══════════════ -->
+{% if report.executive_summary %}
+<div class="content-page page-break">
+  <div class="page-header"><div class="page-header-icon">📋</div><div class="page-header-title">الملخص التنفيذي الاستراتيجي</div></div>
+  <div class="exec-box">{{ report.executive_summary }}</div>
+</div>
+{% endif %}
+
+
+<!-- ══════════════ DIVIDER: INTELLIGENCE ══════════════ -->
+<div class="section-divider">
+  <div class="sdiv-fiber"><div class="sdiv-line sdiv-l1"></div><div class="sdiv-line sdiv-l2"></div><div class="sdiv-line sdiv-l3"></div></div>
+  <div class="sdiv-center"><span class="sdiv-icon">🔍</span><div class="sdiv-line-dec"></div><div class="sdiv-title">الذكاء الاستراتيجي</div><div class="sdiv-subtitle">تحليل شامل للفعالية والسياق الجيوسياسي</div></div>
+</div>
+
+
+<!-- ══════════════ §3 — STRATEGIC INTELLIGENCE ASSESSMENT ══════════════ -->
+{% if report.geopolitical_summary %}
+<div class="content-page page-break">
+  <div class="page-header"><div class="page-header-icon">🌐</div><div class="page-header-title">التقييم الاستخباراتي الاستراتيجي</div></div>
+
+  <!-- Bullet 1: Global Significance -->
+  <div class="intel-bullet-section">
+    <div class="intel-bullet-head">🌐 الأهمية الجيوسياسية العالمية</div>
+    {% if report.intel_global_significance %}
+    <ul class="intel-bullet-list">
+      {% for item in report.intel_global_significance %}<li>{{ item }}</li>{% endfor %}
+    </ul>
+    {% else %}
+    <div class="info-box">{{ report.geopolitical_summary }}</div>
+    {% endif %}
+  </div>
+
+  <!-- Bullet 2: Regulatory / Policy Impact -->
+  <div class="intel-bullet-section">
+    <div class="intel-bullet-head">⚖️ الأثر التنظيمي والسياسي</div>
+    {% if report.intel_regulatory_impact %}
+    <ul class="intel-bullet-list">
+      {% for item in report.intel_regulatory_impact %}<li>{{ item }}</li>{% endfor %}
+    </ul>
+    {% else %}
+    <div class="info-box blue-accent">{{ report.geopolitical_summary|truncatewords:60 }}</div>
+    {% endif %}
+  </div>
+
+  <!-- Bullet 3: Long-Term Strategic Value -->
+  <div class="intel-bullet-section">
+    <div class="intel-bullet-head">🔮 القيمة الاستراتيجية طويلة المدى</div>
+    {% if report.intel_long_term_value %}
+    <ul class="intel-bullet-list">
+      {% for item in report.intel_long_term_value %}<li>{{ item }}</li>{% endfor %}
+    </ul>
+    {% else %}
+    <div class="info-box purple-accent">{{ report.sfda_relevance|default:"—" }}</div>
+    {% endif %}
+  </div>
+
+  <!-- SFDA Talking Points -->
+  {% if report.sfda_talking_points %}
+  <div class="sec-head" style="margin-top:5mm;">💬 نقاط الحديث الاستراتيجية للهيئة</div>
+  <div class="sec-body">
+    {% for point in report.sfda_talking_points %}
+    <div class="tp-item"><div class="tp-item-num">{{ forloop.counter }}</div><div class="tp-item-text">{{ point }}</div></div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+
+
+<!-- ══════════════ §4 — CONFERENCE OVERVIEW ══════════════ -->
+<div class="content-page page-break">
+  <div class="page-header"><div class="page-header-icon">🔍</div><div class="page-header-title">نظرة عامة على المؤتمر</div></div>
+  {% with cd=report.conference_data %}{% if cd %}
+  {% if cd.slogan %}<div style="background:#1c3370;color:white;padding:10px 18px;font-weight:700;font-size:11pt;text-align:center;border-radius:7px;margin-bottom:6mm;">"{{ cd.slogan }}"</div>{% endif %}
+  <table class="field-table">
+    <tr><td class="field-label">الجهة المنظمة</td><td class="field-value">{{ cd.organizer|default:"—" }}</td></tr>
+    <tr><td class="field-label">تاريخ التأسيس</td><td class="field-value">{{ cd.founded|default:report.start_date }}</td></tr>
+    <tr><td class="field-label">الدورة / الإصدار</td><td class="field-value">{{ cd.edition|default:"—" }}</td></tr>
+    <tr><td class="field-label">المشاركون المتوقعون</td><td class="field-value">{{ cd.expected_participants|default:"—" }}</td></tr>
+    <tr><td class="field-label">مستوى المشاركين</td><td class="field-value">{{ cd.participant_profile|default:"وزراء / رؤساء تنفيذيون / قادة حكوميون" }}</td></tr>
+    <tr><td class="field-label">المحاور الرئيسية</td><td class="field-value">{{ cd.core_themes|default:report.conference_summary }}</td></tr>
+    <tr><td class="field-label">مشاركة المملكة</td><td class="field-value">{{ cd.ksa_participation|default:"—" }}</td></tr>
+  </table>
+  {% if report.conference_summary %}
+  <div class="intel-section">
+    <div class="intel-title">📄 موجز تحليلي</div>
+    <div class="intel-body">{{ report.conference_summary }}</div>
+  </div>
+  {% endif %}
+  {% endif %}{% endwith %}
+</div>
+
+
+<!-- ══════════════ §5 — HISTORICAL CONTEXT ══════════════ -->
+<div class="content-page page-break">
+  <div class="page-header"><div class="page-header-icon">🕐</div><div class="page-header-title">السياق التاريخي</div></div>
+  {% if report.conference_history %}
+  <div class="intel-section mb6">
+    <div class="intel-title">🕐 السياق التاريخي للمؤتمر</div>
+    <div class="intel-body">{{ report.conference_history }}</div>
+  </div>
+  {% endif %}
+  {% if report.previous_outcomes %}
+  <div class="sec-head">📈 نتائج الدورات السابقة — السنة / الموضوع / الأثر</div>
+  <div class="sec-body" style="padding:8px;">
+    {% for item in report.previous_outcomes %}
+    <div class="hist-card">
+      <div class="hist-year-bar">📅 {{ item.year }}</div>
+      <table class="hist-grid">
+        {% if item.theme %}<tr><td class="hist-field-label">الموضوع</td><td class="hist-field-value">{{ item.theme }}</td></tr>{% endif %}
+        <tr><td class="hist-field-label">النتائج البارزة</td><td class="hist-field-value">{{ item.summary }}</td></tr>
+        {% if item.relevance %}<tr><td class="hist-field-label">الصلة الاستراتيجية</td><td class="hist-field-value">{{ item.relevance }}</td></tr>{% endif %}
+      </table>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+
+
+<!-- ══════════════ §6 — NATIONAL STRATEGIC RELEVANCE ══════════════ -->
+<div class="content-page page-break">
+  <div class="page-header"><div class="page-header-icon">🇸🇦</div><div class="page-header-title">الصلة بالاستراتيجية الوطنية</div></div>
+
+  <!-- Block 1: Vision Alignment -->
+  <div class="ns-block">
+    <div class="ns-block-head">🎯 التوافق مع الرؤية الوطنية</div>
+    <div class="ns-block-body">{{ report.ns_vision_alignment|default:report.ksa_participation_history }}</div>
+  </div>
+
+  <!-- Block 2: Regulatory Modernization -->
+  <div class="ns-block">
+    <div class="ns-block-head">⚖️ صلة التحديث التنظيمي</div>
+    <div class="ns-block-body">{{ report.ns_regulatory_relevance|default:report.sfda_relevance }}</div>
+  </div>
+
+  <!-- Block 3: Investment Implications -->
+  <div class="ns-block">
+    <div class="ns-block-head">💰 الانعكاسات الاستثمارية</div>
+    <div class="ns-block-body">{{ report.ns_investment_implications|default:"—" }}</div>
+  </div>
+
+  <!-- Block 4: Institutional Positioning -->
+  <div class="ns-block">
+    <div class="ns-block-head">🌍 التموضع المؤسسي الدولي</div>
+    <div class="ns-block-body">{{ report.ns_institutional_positioning|default:"—" }}</div>
+  </div>
+</div>
+
+
+<!-- ══════════════ §7 — BILATERAL RELATIONS CONTEXT ══════════════ -->
+<div class="content-page page-break">
+  <div class="page-header"><div class="page-header-icon">🤝</div><div class="page-header-title">السياق الثنائي</div></div>
+  {% if report.bilateral_relations %}
+  <div class="intel-section mb6">
+    <div class="intel-title">🤝 العلاقات الاستراتيجية الثنائية</div>
+    <div class="intel-body">{{ report.bilateral_relations }}</div>
+  </div>
+  {% endif %}
+  {% if report.bilateral_fields %}
+  <table class="bil-table">
+    <tr><td class="bil-label">حجم التبادل التجاري</td><td class="bil-value">{{ report.bilateral_fields.trade_volume|default:"—" }}</td></tr>
+    <tr><td class="bil-label">مجالات التعاون</td><td class="bil-value">{{ report.bilateral_fields.cooperation_areas|default:"—" }}</td></tr>
+    <tr><td class="bil-label">الاتفاقيات الاستراتيجية</td><td class="bil-value">{{ report.bilateral_fields.strategic_agreements|default:"—" }}</td></tr>
+    <tr><td class="bil-label">التعاون الصحي والتنظيمي</td><td class="bil-value">{{ report.bilateral_fields.health_regulatory|default:"—" }}</td></tr>
+  </table>
+  {% else %}
+  <table class="bil-table">
+    <tr><td class="bil-label">حجم التبادل التجاري</td><td class="bil-value">{{ report.trade_exchange|default:"—" }}</td></tr>
+    <tr><td class="bil-label">متطلبات الدخول</td><td class="bil-value">{{ report.entry_requirements|default:"—" }}</td></tr>
+  </table>
+  {% endif %}
+</div>
+
+
+<!-- ══════════════ §8 — POLITICAL & COUNTRY PROFILE ══════════════ -->
+<div class="content-page page-break">
+  <div class="page-header"><div class="page-header-icon">👤</div><div class="page-header-title">الملف السياسي وملامح الدولة</div></div>
+  {% with ci=report.country_info %}{% if ci %}
+  <table class="field-table mb6">
+    <tr><td class="field-label">النظام السياسي</td><td class="field-value">{{ ci.government|default:"—" }}</td></tr>
+    <tr><td class="field-label">رئيس الدولة</td><td class="field-value">{{ ci.head_of_state|default:"—" }} — {{ ci.head_of_state_title|default:"" }}</td></tr>
+    <tr><td class="field-label">التوجه الاقتصادي</td><td class="field-value">{{ report.political_economic_orientation|default:"—" }}</td></tr>
+    <tr><td class="field-label">الأولويات الاستراتيجية</td><td class="field-value">{{ report.political_strategic_priorities|default:"—" }}</td></tr>
+  </table>
+  {% endif %}{% endwith %}
+  {% if report.leadership_brief %}
+  <div class="intel-section">
+    <div class="intel-title">👤 الملف السياسي التفصيلي</div>
+    <div class="intel-body">{{ report.leadership_brief }}</div>
+  </div>
+  {% endif %}
+</div>
+
+
+<!-- ══════════════ §9 — COUNTRY INTELLIGENCE SNAPSHOT ══════════════ -->
+<div class="content-page page-break">
+  <div class="page-header"><div class="page-header-icon">🌍</div><div class="page-header-title">لمحة استخباراتية عن الدولة</div></div>
+  {% with ci=report.country_info %}{% if ci %}
+  <table style="width:100%;border-collapse:collapse;margin-bottom:6mm;">
+    <thead>
+      <tr>
+        <th style="background:#1c3370;color:white;padding:8px 12px;text-align:right;font-size:9pt;font-weight:700;">المؤشر</th>
+        <th style="background:#1c3370;color:white;padding:8px 12px;text-align:right;font-size:9pt;font-weight:700;">البيانات</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td style="padding:9px 12px;border-bottom:1px solid #edf2f7;color:#64748b;font-size:8.5pt;font-weight:700;background:#f8fafc;">🏙 العاصمة</td><td style="padding:9px 12px;border-bottom:1px solid #edf2f7;font-weight:600;color:#1e293b;font-size:9.5pt;">{{ ci.capital|default:"—" }}</td></tr>
+      <tr><td style="padding:9px 12px;border-bottom:1px solid #edf2f7;color:#64748b;font-size:8.5pt;font-weight:700;">👥 عدد السكان</td><td style="padding:9px 12px;border-bottom:1px solid #edf2f7;font-weight:600;color:#1e293b;font-size:9.5pt;">{{ ci.population|default:"—" }}</td></tr>
+      <tr><td style="padding:9px 12px;border-bottom:1px solid #edf2f7;color:#64748b;font-size:8.5pt;font-weight:700;background:#f8fafc;">💰 الناتج المحلي الإجمالي</td><td style="padding:9px 12px;border-bottom:1px solid #edf2f7;font-weight:600;color:#1e293b;font-size:9.5pt;">{{ ci.gdp|default:"—" }}</td></tr>
+      <tr><td style="padding:9px 12px;border-bottom:1px solid #edf2f7;color:#64748b;font-size:8.5pt;font-weight:700;">📊 نصيب الفرد من الناتج</td><td style="padding:9px 12px;border-bottom:1px solid #edf2f7;font-weight:600;color:#1e293b;font-size:9.5pt;">{{ ci.gdp_per_capita|default:"—" }}</td></tr>
+      <tr><td style="padding:9px 12px;border-bottom:1px solid #edf2f7;color:#64748b;font-size:8.5pt;font-weight:700;background:#f8fafc;">💵 العملة</td><td style="padding:9px 12px;border-bottom:1px solid #edf2f7;font-weight:600;color:#1e293b;font-size:9.5pt;">{{ ci.currency|default:"—" }}</td></tr>
+      <tr><td style="padding:9px 12px;border-bottom:1px solid #edf2f7;color:#64748b;font-size:8.5pt;font-weight:700;">🕐 المنطقة الزمنية</td><td style="padding:9px 12px;border-bottom:1px solid #edf2f7;font-weight:600;color:#1e293b;font-size:9.5pt;">{{ ci.timezone|default:"—" }}</td></tr>
+      <tr><td style="padding:9px 12px;border-bottom:1px solid #edf2f7;color:#64748b;font-size:8.5pt;font-weight:700;background:#f8fafc;">🏭 القطاعات الرئيسية</td><td style="padding:9px 12px;border-bottom:1px solid #edf2f7;font-weight:600;color:#1e293b;font-size:9.5pt;">{{ ci.key_sectors|default:ci.official_language }}</td></tr>
+    </tbody>
+  </table>
+  {% endif %}{% endwith %}
+</div>
+
+
+<!-- ══════════════ §10-12 — DETAILED AGENDA (ONE PAGE PER DAY) ══════════════ -->
+{% for day in report.agenda %}
+<div class="content-page page-break">
+  <div class="page-header"><div class="page-header-icon">📅</div><div class="page-header-title">جدول الأعمال التفصيلي — {{ day.day_label }}</div></div>
+  <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:7px;padding:7px 14px;margin-bottom:5mm;display:flex;align-items:center;gap:8px;">
+    <span style="font-weight:700;color:#1c3370;font-size:9pt;">{{ day.day_label_en }}</span>
+    <span style="color:#64748b;font-size:9pt;">·</span>
+    <span class="ltr" style="color:#475569;font-size:9pt;">{{ day.date }}</span>
+  </div>
+  <table class="agenda-table">
+    <thead><tr>
+      <th style="width:12%;">الوقت</th>
+      <th style="width:34%;">عنوان الجلسة</th>
+      <th style="width:22%;">الموقع</th>
+      <th style="width:14%;">المشاركة</th>
+      <th style="width:18%;">الأهمية الاستراتيجية</th>
+    </tr></thead>
+    <tbody>
+    {% for item in day.items %}
+    <tr>
+      <td><span class="agenda-time ltr">{{ item.time }}</span></td>
+      <td><span class="agenda-activity">{{ item.activity }}</span></td>
+      <td><span class="agenda-location">{{ item.location }}</span></td>
+      <td>
+        {% if item.type == 'bilateral' %}<span style="background:#dbeafe;color:#1d4ed8;font-size:7pt;font-weight:700;padding:2px 7px;border-radius:10px;">ثنائي</span>
+        {% elif item.type == 'session' %}<span style="background:#dcfce7;color:#166534;font-size:7pt;font-weight:700;padding:2px 7px;border-radius:10px;">جلسة</span>
+        {% elif item.type == 'networking' %}<span style="background:#fef9c3;color:#854d0e;font-size:7pt;font-weight:700;padding:2px 7px;border-radius:10px;">تواصل</span>
+        {% elif item.type == 'ceremony' %}<span style="background:#f3e8ff;color:#7e22ce;font-size:7pt;font-weight:700;padding:2px 7px;border-radius:10px;">حفل</span>
+        {% else %}<span style="background:#f1f5f9;color:#64748b;font-size:7pt;font-weight:700;padding:2px 7px;border-radius:10px;">لوجستي</span>{% endif %}
+      </td>
+      <td><span style="font-size:8pt;color:#475569;">{{ item.strategic_relevance|default:"—" }}</span></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endfor %}
+
+
+<!-- ══════════════ §13 — DELEGATION COMPOSITION ══════════════ -->
+<div class="content-page page-break">
+  <div class="page-header"><div class="page-header-icon">👥</div><div class="page-header-title">تشكيل الوفد الرسمي</div></div>
+  <table class="deleg-table">
+    <thead><tr><th class="deleg-num">#</th><th>الاسم</th><th>المسمى الوظيفي</th><th>الإدارة</th><th>الدور في الزيارة</th></tr></thead>
+    <tbody>
+    {% for member in report.delegation %}
+    <tr>
+      <td class="deleg-num">{{ forloop.counter }}</td>
+      <td><span class="deleg-name">{{ member.name }}</span></td>
+      <td><span class="deleg-title">{{ member.title }}</span></td>
+      <td><span class="deleg-dept">{{ member.department }}</span></td>
+      <td><span style="font-size:8.5pt;color:#475569;line-height:1.5;">{{ member.strategic_role|default:"—" }}</span></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+
+<!-- ══════════════ DIVIDER: CONFERENCE ══════════════ -->
+<div class="section-divider">
+  <div class="sdiv-fiber"><div class="sdiv-line sdiv-l1"></div><div class="sdiv-line sdiv-l2"></div><div class="sdiv-line sdiv-l3"></div></div>
+  <div class="sdiv-center"><span class="sdiv-icon">🎤</span><div class="sdiv-line-dec"></div><div class="sdiv-title">تفاصيل الفعالية</div><div class="sdiv-subtitle">المسارات والجلسات والمتحدثون</div></div>
+</div>
+
+
+<!-- ══════════════ §14 — CONFERENCE TRACKS & PILLARS ══════════════ -->
+{% if report.conference_tracks %}
+<div class="content-page page-break">
+  <div class="page-header"><div class="page-header-icon">🔷</div><div class="page-header-title">محاور ومسارات الفعالية</div></div>
+  {% for track in report.conference_tracks %}
+  <div class="ns-block" style="margin-bottom:4mm;">
+    <div class="ns-block-head">{{ forloop.counter }}. {{ track.name|default:track }}</div>
+    <div class="ns-block-body">{{ track.explanation|default:"محور استراتيجي ذو صلة مباشرة بمهام الهيئة وأهداف رؤية 2030 في قطاع الصحة والدواء." }}</div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+
+<!-- ══════════════ DIVIDER: SESSIONS ══════════════ -->
+<div class="section-divider">
+  <div class="sdiv-fiber"><div class="sdiv-line sdiv-l1"></div><div class="sdiv-line sdiv-l2"></div><div class="sdiv-line sdiv-l3"></div></div>
+  <div class="sdiv-center"><span class="sdiv-icon">📋</span><div class="sdiv-line-dec"></div><div class="sdiv-title">تحليل الجلسات</div><div class="sdiv-subtitle">الأثر الاستراتيجي لجلسات الفعالية</div></div>
+</div>
+
+
+<!-- ══════════════ §15 — SESSION IMPACT ANALYSIS ══════════════ -->
+<div class="content-page page-break">
+  <div class="page-header"><div class="page-header-icon">📋</div><div class="page-header-title">تحليل الأثر الاستراتيجي للجلسات</div></div>
+  {% if report.sessions.day1 %}
+  <div class="session-day-header">📅 اليوم الأول — Day 1</div>
+  {% for s in report.sessions.day1 %}
+  <div class="sim-card">
+    <div class="sim-header">{{ s.title }}</div>
+    <table class="sim-grid">
+      {% if s.speakers %}<tr><td class="sim-label">👤 المتحدثون</td><td class="sim-value">{{ s.speakers }}</td></tr>{% endif %}
+      {% if s.policy_implications %}<tr><td class="sim-label">📜 الأثر السياسي</td><td class="sim-value">{{ s.policy_implications }}</td></tr>{% endif %}
+      {% if s.regulatory_impact %}<tr><td class="sim-label">⚖️ الأثر التنظيمي</td><td class="sim-value">{{ s.regulatory_impact }}</td></tr>{% endif %}
+      {% if s.investment_implications %}<tr><td class="sim-label">💰 البُعد الاستثماري</td><td class="sim-value">{{ s.investment_implications }}</td></tr>{% endif %}
+      <tr><td class="sim-label">🎯 مستوى الأهمية</td>
+        <td class="sim-value {% if s.strategic_score == 'عالي' %}sim-level-high{% elif s.strategic_score == 'حرج' %}sim-level-critical{% else %}sim-level-medium{% endif %}">
+          {{ s.strategic_score|default:"متوسط" }}
+        </td>
+      </tr>
+    </table>
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% if report.sessions.day2 %}
+  <div class="session-day-header" style="margin-top:5mm;">📅 اليوم الثاني — Day 2</div>
+  {% for s in report.sessions.day2 %}
+  <div class="sim-card">
+    <div class="sim-header">{{ s.title }}</div>
+    <table class="sim-grid">
+      {% if s.speakers %}<tr><td class="sim-label">👤 المتحدثون</td><td class="sim-value">{{ s.speakers }}</td></tr>{% endif %}
+      {% if s.policy_implications %}<tr><td class="sim-label">📜 الأثر السياسي</td><td class="sim-value">{{ s.policy_implications }}</td></tr>{% endif %}
+      {% if s.regulatory_impact %}<tr><td class="sim-label">⚖️ الأثر التنظيمي</td><td class="sim-value">{{ s.regulatory_impact }}</td></tr>{% endif %}
+      {% if s.investment_implications %}<tr><td class="sim-label">💰 البُعد الاستثماري</td><td class="sim-value">{{ s.investment_implications }}</td></tr>{% endif %}
+      <tr><td class="sim-label">🎯 مستوى الأهمية</td><td class="sim-value {% if s.strategic_score == 'عالي' %}sim-level-high{% elif s.strategic_score == 'حرج' %}sim-level-critical{% else %}sim-level-medium{% endif %}">{{ s.strategic_score|default:"متوسط" }}</td></tr>
+    </table>
+  </div>
+  {% endfor %}
+  {% endif %}
+</div>
+<div class="content-page page-break">
+  <div class="page-header"><div class="page-header-icon">📋</div><div class="page-header-title">تحليل الأثر الاستراتيجي للجلسات — تابع</div></div>
+  {% if report.sessions.day3 %}
+  <div class="session-day-header">📅 اليوم الثالث — Day 3</div>
+  {% for s in report.sessions.day3 %}
+  <div class="sim-card">
+    <div class="sim-header">{{ s.title }}</div>
+    <table class="sim-grid">
+      {% if s.speakers %}<tr><td class="sim-label">👤 المتحدثون</td><td class="sim-value">{{ s.speakers }}</td></tr>{% endif %}
+      {% if s.policy_implications %}<tr><td class="sim-label">📜 الأثر السياسي</td><td class="sim-value">{{ s.policy_implications }}</td></tr>{% endif %}
+      {% if s.regulatory_impact %}<tr><td class="sim-label">⚖️ الأثر التنظيمي</td><td class="sim-value">{{ s.regulatory_impact }}</td></tr>{% endif %}
+      {% if s.investment_implications %}<tr><td class="sim-label">💰 البُعد الاستثماري</td><td class="sim-value">{{ s.investment_implications }}</td></tr>{% endif %}
+      <tr><td class="sim-label">🎯 مستوى الأهمية</td><td class="sim-value {% if s.strategic_score == 'عالي' %}sim-level-high{% elif s.strategic_score == 'حرج' %}sim-level-critical{% else %}sim-level-medium{% endif %}">{{ s.strategic_score|default:"متوسط" }}</td></tr>
+    </table>
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% if report.sessions.day4 %}
+  <div class="session-day-header" style="margin-top:5mm;">📅 اليوم الرابع — Day 4</div>
+  {% for s in report.sessions.day4 %}
+  <div class="sim-card">
+    <div class="sim-header">{{ s.title }}</div>
+    <table class="sim-grid">
+      {% if s.speakers %}<tr><td class="sim-label">👤 المتحدثون</td><td class="sim-value">{{ s.speakers }}</td></tr>{% endif %}
+      {% if s.policy_implications %}<tr><td class="sim-label">📜 الأثر السياسي</td><td class="sim-value">{{ s.policy_implications }}</td></tr>{% endif %}
+      {% if s.regulatory_impact %}<tr><td class="sim-label">⚖️ الأثر التنظيمي</td><td class="sim-value">{{ s.regulatory_impact }}</td></tr>{% endif %}
+      {% if s.investment_implications %}<tr><td class="sim-label">💰 البُعد الاستثماري</td><td class="sim-value">{{ s.investment_implications }}</td></tr>{% endif %}
+      <tr><td class="sim-label">🎯 مستوى الأهمية</td><td class="sim-value {% if s.strategic_score == 'عالي' %}sim-level-high{% elif s.strategic_score == 'حرج' %}sim-level-critical{% else %}sim-level-medium{% endif %}">{{ s.strategic_score|default:"متوسط" }}</td></tr>
+    </table>
+  </div>
+  {% endfor %}
+  {% endif %}
+</div>
+
+
+<!-- ══════════════ DIVIDER: SPEAKERS ══════════════ -->
+<div class="section-divider">
+  <div class="sdiv-fiber"><div class="sdiv-line sdiv-l1"></div><div class="sdiv-line sdiv-l2"></div><div class="sdiv-line sdiv-l3"></div></div>
+  <div class="sdiv-center"><span class="sdiv-icon">🎤</span><div class="sdiv-line-dec"></div><div class="sdiv-title">المتحدثون الرئيسيون</div><div class="sdiv-subtitle">أبرز المتحدثين والمشاركين في الفعالية</div></div>
+</div>
+
+
+<!-- ══════════════ §16 — KEY SPEAKERS ══════════════ -->
+{% if report.speakers %}
+<div class="content-page page-break">
+  <div class="page-header"><div class="page-header-icon">🎤</div><div class="page-header-title">المتحدثون الرئيسيون</div></div>
+  <div style="font-size:8pt;color:#94a3b8;margin-bottom:5mm;">✅ البيانات موثقة من الموقع الرسمي للفعالية ومصادر رسمية معتمدة</div>
+  <table class="spk-table">
+    <thead><tr><th>#</th><th>الاسم</th><th>المسمى الوظيفي</th><th>المنظمة</th><th>الدولة</th><th>الأهمية الاستراتيجية</th></tr></thead>
+    <tbody>
+    {% for sp in report.speakers %}
+    <tr>
+      <td style="color:#94a3b8;font-size:8.5pt;text-align:center;">{{ forloop.counter }}</td>
+      <td style="font-weight:700;color:#1e3a5f;">{{ sp.name }}</td>
+      <td style="color:#475569;font-size:8.5pt;">{{ sp.title }}</td>
+      <td style="color:#64748b;font-size:8.5pt;">{{ sp.organization }}</td>
+      <td style="font-size:8.5pt;color:#3b82f6;font-weight:600;">{{ sp.country }}</td>
+      <td style="font-size:8pt;">
+        {% if sp.influence_profile %}<span style="background:#eff6ff;color:#1d4ed8;padding:2px 7px;border-radius:10px;font-size:7.5pt;font-weight:600;">{{ sp.influence_profile|truncatewords:8 }}</span>{% else %}—{% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% if speaker_pairs %}
+  <div style="margin-top:8mm;">
+    <div class="sec-head">🎯 ملف التأثير والصلة بأعمال الوفد</div>
+    <div class="sec-body" style="padding:8px;">
+      <table class="spk-cards-grid">
+        {% for left, right in speaker_pairs %}
+        <tr class="spk-cards-row">
+          <td class="spk-cards-cell">
+            <div class="spk-card">
+              <div class="spk-avatar" style="{{ left.style }}">{{ left.initial }}</div>
+              <div class="spk-name">{{ left.name }}</div>
+              <div class="spk-title">{{ left.title }}</div>
+              <div class="spk-org">{{ left.organization }}</div>
+              <span class="spk-country-badge">{{ left.country }}</span>
+              {% if left.influence_profile %}<div style="font-size:7.5pt;color:#1e3a5f;margin-top:5px;line-height:1.5;background:#eff6ff;border-radius:4px;padding:4px 6px;text-align:right;"><span style="font-weight:700;color:#1d4ed8;">🌐 الأهمية: </span>{{ left.influence_profile }}</div>{% endif %}
+              {% if left.relevance %}<div style="font-size:7.5pt;color:#334155;margin-top:4px;line-height:1.5;background:#f0fdf4;border-radius:4px;padding:4px 6px;text-align:right;"><span style="font-weight:700;color:#166534;">🎯 الصلة بالوفد: </span>{{ left.relevance }}</div>{% endif %}
+            </div>
+          </td>
+          <td class="spk-cards-cell">
+            {% if right %}
+            <div class="spk-card">
+              <div class="spk-avatar" style="{{ right.style }}">{{ right.initial }}</div>
+              <div class="spk-name">{{ right.name }}</div>
+              <div class="spk-title">{{ right.title }}</div>
+              <div class="spk-org">{{ right.organization }}</div>
+              <span class="spk-country-badge">{{ right.country }}</span>
+              {% if right.influence_profile %}<div style="font-size:7.5pt;color:#1e3a5f;margin-top:5px;line-height:1.5;background:#eff6ff;border-radius:4px;padding:4px 6px;text-align:right;"><span style="font-weight:700;color:#1d4ed8;">🌐 الأهمية: </span>{{ right.influence_profile }}</div>{% endif %}
+              {% if right.relevance %}<div style="font-size:7.5pt;color:#334155;margin-top:4px;line-height:1.5;background:#f0fdf4;border-radius:4px;padding:4px 6px;text-align:right;"><span style="font-weight:700;color:#166534;">🎯 الصلة بالوفد: </span>{{ right.relevance }}</div>{% endif %}
+            </div>
+            {% endif %}
+          </td>
+          <td class="spk-cards-cell"></td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+
+
+<!-- ══════════════ DIVIDER: BILATERAL ══════════════ -->
+<div class="section-divider">
+  <div class="sdiv-fiber"><div class="sdiv-line sdiv-l1"></div><div class="sdiv-line sdiv-l2"></div><div class="sdiv-line sdiv-l3"></div></div>
+  <div class="sdiv-center"><span class="sdiv-icon">🤝</span><div class="sdiv-line-dec"></div><div class="sdiv-title">الاجتماعات الثنائية</div><div class="sdiv-subtitle">الاجتماعات المقررة على هامش الفعالية</div></div>
+</div>
+
+
+<!-- ══════════════ §17 — CONFIRMED BILATERAL MEETINGS ══════════════ -->
+<div class="content-page page-break">
+  <div class="page-header"><div class="page-header-icon">🤝</div><div class="page-header-title">الاجتماعات الثنائية المقررة</div></div>
+  {% for meeting in report.bilateral_meetings %}
+  <div class="mtg-card">
+    <div class="mtg-header">🤝 {{ meeting.entity }}</div>
+    <div class="mtg-body">
+      <div class="mtg-field-row"><span class="mtg-field-label">الجهة المقابلة</span><span class="mtg-field-value">{{ meeting.counterpart }}</span></div>
+      <div class="mtg-field-row"><span class="mtg-field-label">المسمى الوظيفي</span><span class="mtg-field-value">{{ meeting.counterpart_title|default:"—" }}</span></div>
+      <div class="mtg-field-row"><span class="mtg-field-label">التاريخ والوقت</span><span class="mtg-field-value ltr">{{ meeting.date }} — {{ meeting.time }}</span></div>
+      <div class="mtg-field-row"><span class="mtg-field-label">الموقع</span><span class="mtg-field-value">{{ meeting.location }}</span></div>
+      <div style="margin-top:8px;">
+        <div class="tp-header">📌 موضوعات النقاش:</div>
+        {% for point in meeting.talking_points %}
+        <div class="tp-row"><div class="tp-num">{{ forloop.counter }}</div><div class="tp-text">{{ point }}</div></div>
+        {% endfor %}
+      </div>
+      {% if meeting.strategic_objective %}
+      <div class="mtg-objective">🎯 <strong>الهدف الاستراتيجي:</strong> {{ meeting.strategic_objective }}</div>
+      {% endif %}
+      {% if meeting.expected_outcome %}
+      <div class="mtg-outcome">✅ <strong>النتيجة المتوقعة:</strong> {{ meeting.expected_outcome }}</div>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+
+<!-- ══════════════ §18 — PROPOSED MEETINGS ══════════════ -->
+{% if report.suggested_meetings %}
+<div class="content-page page-break">
+  <div class="page-header"><div class="page-header-icon">📋</div><div class="page-header-title">الاجتماعات المقترحة</div></div>
+  <div style="font-size:9pt;color:#64748b;margin-bottom:5mm;">الجهات المرشحة للقاء خلال الزيارة بناءً على التوافق مع مهام الهيئة وأهدافها الاستراتيجية</div>
+  {% for m in report.suggested_meetings %}
+  <div class="mtg-card">
+    <div class="mtg-header">📋 {{ m.entity }}{% if m.country %} — <span style="font-weight:400;font-size:9pt;opacity:0.85;">{{ m.country }}</span>{% endif %}</div>
+    <div class="mtg-body">
+      <div class="mtg-field-row"><span class="mtg-field-label">الجهة المقابلة</span><span class="mtg-field-value">يُحدَّد لاحقاً</span></div>
+      <div class="mtg-field-row"><span class="mtg-field-label">موضوعات النقاش</span><span class="mtg-field-value">{{ m.description|default:"—" }}</span></div>
+      <div class="mtg-field-row"><span class="mtg-field-label">الهدف الاستراتيجي</span><span class="mtg-field-value">{{ m.rationale|default:"—" }}</span></div>
+      <div class="mtg-field-row">
+        <span class="mtg-field-label">الأولوية</span>
+        <span class="mtg-field-value">
+          <span class="priority-badge {% if m.priority == 'high' %}p-high{% elif m.priority == 'medium' %}p-med{% else %}p-low{% endif %}">
+            {% if m.priority == 'high' %}عالية{% elif m.priority == 'medium' %}متوسطة{% else %}منخفضة{% endif %}
+          </span>
+        </span>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+
+<!-- ══════════════ DIVIDER: LOGISTICS ══════════════ -->
+<div class="section-divider">
+  <div class="sdiv-fiber"><div class="sdiv-line sdiv-l1"></div><div class="sdiv-line sdiv-l2"></div><div class="sdiv-line sdiv-l3"></div></div>
+  <div class="sdiv-center"><span class="sdiv-icon">🏛</span><div class="sdiv-line-dec"></div><div class="sdiv-title">اللوجستيات والدعم القنصلي</div><div class="sdiv-subtitle">بيانات السفارة والقنصلية والطقس وأوقات الصلاة</div></div>
+</div>
+
+
+<!-- ══════════════ §19 — EMBASSY & CONSULAR INFORMATION (MERGED) ══════════════ -->
+<div class="content-page page-break">
+  <div class="page-header"><div class="page-header-icon">🏛</div><div class="page-header-title">معلومات السفارة والقنصلية</div></div>
+
+  <!-- EMBASSY -->
+  {% if report.embassy and report.embassy.name %}
+  {% with emb=report.embassy %}
+  <div class="contact-card mb6">
+    <div class="contact-header">🏛 {{ emb.name|default:"السفارة السعودية" }}</div>
+    {% if emb.mission %}<div style="padding:10px 14px;border-bottom:1px solid #edf2f7;font-size:9pt;color:#334155;line-height:1.7;">{{ emb.mission }}</div>{% endif %}
+    {% if emb.ambassador_name %}
+    <div class="contact-ambassador">
+      <div class="amb-icon">👤</div>
+      <div><div class="amb-name">{{ emb.ambassador_name }}</div><div class="amb-title">{{ emb.ambassador_title|default:"سفير المملكة العربية السعودية" }}</div></div>
+    </div>
+    {% endif %}
+    <table class="contact-table" style="padding:0 14px 14px;">
+      <tr><td class="ci">📍</td><td colspan="3"><div class="meta-label">العنوان</div><div style="font-weight:600;color:#1e293b;" class="ltr">{{ emb.address|default:"—" }}</div></td></tr>
+      <tr><td class="ci">📞</td><td><div class="meta-label">هاتف</div><div class="ltr" style="font-weight:600;">{{ emb.phone|default:"—" }}</div></td>
+          <td class="ci">📠</td><td><div class="meta-label">طوارئ</div><div class="ltr" style="font-weight:600;color:#ef4444;">{{ emb.emergency_phone|default:"—" }}</div></td></tr>
+      <tr><td class="ci">📧</td><td><div class="meta-label">البريد الإلكتروني</div><div class="ltr" style="font-size:8.5pt;color:#3b82f6;">{{ emb.email|default:"—" }}</div></td>
+          <td class="ci">🌐</td><td><div class="meta-label">الموقع</div><div class="ltr" style="font-size:8.5pt;color:#3b82f6;">{{ emb.website|default:"—" }}</div></td></tr>
+      <tr><td class="ci">🕐</td><td colspan="3"><div class="meta-label">ساعات العمل</div><div style="font-size:9pt;">من الاثنين إلى الجمعة، 9:00–17:00</div></td></tr>
+    </table>
+  </div>
+  {% endwith %}
+  {% endif %}
+
+  <!-- CONSULATE -->
+  {% if report.consulate %}
+  {% with con=report.consulate %}
+  <div class="contact-card">
+    <div class="contact-header">🏛 {{ con.name|default:"القنصلية العامة للمملكة العربية السعودية" }}</div>
+    {% if con.consul_name %}
+    <div class="contact-ambassador">
+      <div class="amb-icon">👤</div>
+      <div><div class="amb-name">{{ con.consul_name }}</div><div class="amb-title">{{ con.consul_title|default:"القنصل العام للمملكة العربية السعودية" }}</div></div>
+    </div>
+    {% if con.consul_bio %}<div style="padding:0 14px 10px;font-size:8.5pt;color:#475569;line-height:1.6;">{{ con.consul_bio }}</div>{% endif %}
+    {% endif %}
+    <table class="contact-table" style="padding:0 14px 14px;">
+      <tr><td class="ci">📍</td><td colspan="3"><div class="meta-label">العنوان</div><div style="font-weight:600;" class="ltr">{{ con.address|default:"—" }}</div></td></tr>
+      <tr><td class="ci">📞</td><td><div class="meta-label">هاتف</div><div class="ltr" style="font-weight:600;">{{ con.phone|default:"—" }}</div></td>
+          <td class="ci">🆘</td><td><div class="meta-label">طوارئ</div><div class="ltr" style="font-weight:600;color:#ef4444;">{{ con.emergency_phone|default:"—" }}</div></td></tr>
+      <tr><td class="ci">📧</td><td><div class="meta-label">البريد الإلكتروني</div><div class="ltr" style="font-size:8.5pt;color:#3b82f6;">{{ con.email|default:"—" }}</div></td>
+          <td class="ci">🕐</td><td><div class="meta-label">ساعات العمل</div><div style="font-size:8.5pt;">{{ con.working_hours|default:"من الاثنين إلى الجمعة، 9:00–17:00" }}</div></td></tr>
+    </table>
+  </div>
+  {% endwith %}
+  {% endif %}
+</div>
+
+
+<!-- ══════════════ §20 — WEATHER & PRAYER TIMES ══════════════ -->
+<div class="content-page page-break">
+  <div class="page-header"><div class="page-header-icon">🌤</div><div class="page-header-title">توقعات الطقس وأوقات الصلاة</div></div>
+
+  {% if report.weather %}
+  <div class="sec-head">🌤 توقعات الطقس — جدول تفصيلي</div>
+  <div class="sec-body" style="padding:8px 0 0 0;">
+    <table class="wx-table">
+      <thead><tr>
+        <th>التاريخ</th><th>الحالة</th><th>الحرارة العليا</th><th>الحرارة الدنيا</th><th>الرياح</th><th>الرطوبة</th>
+      </tr></thead>
+      <tbody>
+      {% for day in report.weather %}
+      <tr>
+        <td><div style="font-weight:700;color:#1c3370;">{{ day.day }}</div><div class="ltr" style="font-size:8pt;color:#94a3b8;">{{ day.date }}</div></td>
+        <td class="wx-cond-col">{% if "sun" in day.condition|lower or "clear" in day.condition|lower %}☀️{% elif "cloud" in day.condition|lower %}⛅{% elif "rain" in day.condition|lower %}🌧️{% elif "snow" in day.condition|lower %}❄️{% else %}🌤️{% endif %} {{ day.condition }}</td>
+        <td class="wx-temp-col">{{ day.high }}°C</td>
+        <td class="wx-temp-col">{{ day.low }}°C</td>
+        <td style="font-size:8.5pt;color:#475569;">{{ day.wind }}</td>
+        <td style="font-size:8.5pt;color:#475569;">{{ day.humidity }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+
+  {% if report.prayer_times %}
+  <div class="sec-head" style="margin-top:6mm;">🕌 أوقات الصلاة — {{ report.city }}</div>
+  <div class="sec-body" style="padding:8px 0 0 0;">
+    <table class="prayer-table">
+      <thead><tr>
+        <th style="text-align:right;">التاريخ</th>
+        <th>الفجر</th><th>الظهر</th><th>العصر</th><th>المغرب</th><th>العشاء</th>
+      </tr></thead>
+      <tbody>
+      {% for pt in report.prayer_times %}
+      <tr>
+        <td class="prayer-day-col">{{ pt.day }}<br><span class="ltr" style="font-size:8pt;color:#94a3b8;">{{ pt.date }}</span></td>
+        <td class="prayer-time ltr">{{ pt.fajr }}</td>
+        <td class="prayer-time ltr">{{ pt.dhuhr }}</td>
+        <td class="prayer-time ltr">{{ pt.asr }}</td>
+        <td class="prayer-time ltr">{{ pt.maghrib }}</td>
+        <td class="prayer-time ltr">{{ pt.isha }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+</div>
+
+
+<!-- ══════════════ §21 — ATTACHMENTS ══════════════ -->
+{% if report.attachments %}
+<div class="content-page page-break">
+  <div class="page-header"><div class="page-header-icon">📎</div><div class="page-header-title">المرفقات والوثائق الداعمة</div></div>
+  {% for att in report.attachments %}
+  <div class="attach-item">
+    <div class="attach-icon">📄</div>
+    <div class="attach-name">{{ att }}</div>
+  </div>
+  {% endfor %}
+  <div style="margin-top:12mm;padding-top:6mm;border-top:1px solid #edf2f7;text-align:center;color:#94a3b8;font-size:8pt;">
+    تم إعداد هذه الوثيقة بواسطة نظام الذكاء الاصطناعي لإدارة السفر<br>
+    الهيئة العامة للغذاء والدواء · {{ report.created_at|date:"Y-m-d"|default:"2026" }}
+  </div>
+</div>
+{% endif %}
+
+</body>
+</html>
