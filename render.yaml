@@ -4,8 +4,7 @@ services:
     env: python
     plan: free
     buildCommand: "pip install -r backend/requirements.txt && chmod +x build.sh && ./build.sh"
-    startCommand: "gunicorn sfda_project.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --timeout 120 --chdir backend"
-    envVars:
+    startCommand: "cd /opt/render/project/src/backend && gunicorn sfda_project.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --timeout 120"
       - key: SECRET_KEY
         generateValue: true
       - key: DEBUG
