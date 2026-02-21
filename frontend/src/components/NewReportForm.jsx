@@ -110,6 +110,20 @@ const L = {
   },
 };
 
+// ── Block component (MUST be outside NewReportForm to avoid remount bug) ──────
+function Block({icon, title, badge, children, dir, font}) {
+  return (
+    <div style={{background:'#FFFFFF', borderRadius:12, padding:'20px 22px', border:'1px solid #EFF6FF', marginBottom:14, boxShadow:'0 4px 20px rgba(0,0,0,0.2)'}}>
+      <div style={{display:'flex', alignItems:'center', gap:10, marginBottom:18, direction:dir}}>
+        <div style={{width:28, height:28, borderRadius:7, background:'#EFF6FF', display:'flex', alignItems:'center', justifyContent:'center', fontSize:14, flexShrink:0}}>{icon}</div>
+        <span style={{fontWeight:700, fontSize:15, color:'#111827', fontFamily:font}}>{title}</span>
+        {badge && <span style={{fontSize:10, fontWeight:600, color:'rgba(212,175,55,0.6)', background:'rgba(212,175,55,0.08)', padding:'2px 7px', borderRadius:4}}>{badge}</span>}
+      </div>
+      {children}
+    </div>
+  );
+}
+
 export default function NewReportForm({ onSuccess, onCancel, lang = 'ar' }) {
   const l    = L[lang] || L.ar;
   const isAr = lang === 'ar';
@@ -226,16 +240,7 @@ export default function NewReportForm({ onSuccess, onCancel, lang = 'ar' }) {
   const onFocus = e => { e.target.style.borderColor='#3b82f6'; };
   const onBlur  = e => { e.target.style.borderColor='#e2e8f0'; };
 
-  const Block = ({icon, title, badge, children}) => (
-    <div style={{background:'#FFFFFF', borderRadius:12, padding:'20px 22px', border:'1px solid #EFF6FF', marginBottom:14, boxShadow:'0 4px 20px rgba(0,0,0,0.2)'}}>
-      <div style={{display:'flex', alignItems:'center', gap:10, marginBottom:18, direction:dir}}>
-        <div style={{width:28, height:28, borderRadius:7, background:'#EFF6FF', display:'flex', alignItems:'center', justifyContent:'center', fontSize:14, flexShrink:0}}>{icon}</div>
-        <span style={{fontWeight:700, fontSize:15, color:'#111827', fontFamily:font}}>{title}</span>
-        {badge && <span style={{fontSize:10, fontWeight:600, color:'rgba(212,175,55,0.6)', background:'rgba(212,175,55,0.08)', padding:'2px 7px', borderRadius:4}}>{badge}</span>}
-      </div>
-      {children}
-    </div>
-  );
+  // Block is defined outside (below) to avoid remount-on-every-keystroke bug
 
   // ── Preview overlay ─────────────────────────────────────────
   if (previewMode && report) {
@@ -326,7 +331,7 @@ export default function NewReportForm({ onSuccess, onCancel, lang = 'ar' }) {
       )}
 
       {/* ── Event Details ── */}
-      <Block icon="📄" title={l.eventDetails}>
+      <Block icon="📄" title={l.eventDetails} dir={dir} font={font}>
         <div style={{marginBottom:14}}>
           <label style={lbl}>{l.eventName} <span style={{color:'#ef4444'}}>*</span></label>
           <input style={inp} placeholder={l.eventNamePH} value={form.event_name} onChange={set('event_name')} onFocus={onFocus} onBlur={onBlur}/>
@@ -357,7 +362,7 @@ export default function NewReportForm({ onSuccess, onCancel, lang = 'ar' }) {
       </Block>
 
       {/* ── Location ── */}
-      <Block icon="📍" title={l.location}>
+      <Block icon="📍" title={l.location} dir={dir} font={font}>
         <div style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:12}}>
           <div>
             <label style={lbl}>{l.city} <span style={{color:'#ef4444'}}>*</span></label>
@@ -381,7 +386,7 @@ export default function NewReportForm({ onSuccess, onCancel, lang = 'ar' }) {
       </Block>
 
       {/* ── Dates ── */}
-      <Block icon="📅" title={l.dates}>
+      <Block icon="📅" title={l.dates} dir={dir} font={font}>
         <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:12}}>
           <div>
             <label style={lbl}>{l.startDate} <span style={{color:'#ef4444'}}>*</span></label>
@@ -395,7 +400,7 @@ export default function NewReportForm({ onSuccess, onCancel, lang = 'ar' }) {
       </Block>
 
       {/* ── Traveler ── */}
-      <Block icon="👤" title={l.traveler}>
+      <Block icon="👤" title={l.traveler} dir={dir} font={font}>
         <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:12}}>
           <div><label style={lbl}>{l.travelerName}</label><input style={inp} value={form.traveler_name} onChange={set('traveler_name')} onFocus={onFocus} onBlur={onBlur}/></div>
           <div><label style={lbl}>{l.travelerTitle}</label><input style={inp} value={form.traveler_title} onChange={set('traveler_title')} onFocus={onFocus} onBlur={onBlur}/></div>
@@ -403,7 +408,7 @@ export default function NewReportForm({ onSuccess, onCancel, lang = 'ar' }) {
       </Block>
 
       {/* ── Context ── */}
-      <Block icon="💬" title={l.context} badge={l.contextBadge}>
+      <Block icon="💬" title={l.context} badge={l.contextBadge} dir={dir} font={font}>
         <textarea style={{...inp, resize:'vertical', minHeight:90, lineHeight:1.65}} placeholder={l.contextPH} value={form.context} onChange={set('context')} onFocus={onFocus} onBlur={onBlur}/>
       </Block>
 
