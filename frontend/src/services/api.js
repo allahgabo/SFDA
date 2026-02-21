@@ -22,7 +22,8 @@ api.interceptors.response.use(
         localStorage.removeItem('sfda_token');
         localStorage.removeItem('sfda_user');
         // Reload → App.jsx will detect no token and show login
-        window.location.reload();
+        window.dispatchEvent(new CustomEvent('sfda_unauthorized'));
+        
       }
     }
     return Promise.reject(err);
