@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import Sidebar from './components/Sidebar';
 import WorldMap from './components/WorldMap';
-import NewReportForm from './components/NewReportForm';
+import NewReportForm  from './components/NewReportForm';
 import ReportDetail from './components/ReportDetail';
 import AIAssistant from './components/AIAssistant';
 import LoginPage from './components/auth/LoginPage';
@@ -290,6 +290,13 @@ export default function App() {
   const setPage = p => setPageRaw(p);
   const handleLogin = ()=>setAuthScreen(null);
   const handleLogout = ()=>{clearAuth();setAuthScreen('login');};
+
+  // Listen for 401 events from api.js interceptor
+  useEffect(()=>{
+    const handler = ()=>{ clearAuth(); setAuthScreen('login'); };
+    window.addEventListener('sfda_unauthorized', handler);
+    return ()=>window.removeEventListener('sfda_unauthorized', handler);
+  },[]);
   const t    = T[lang];
   const isAr = lang==='ar';
   const dir  = isAr?'rtl':'ltr';
@@ -301,7 +308,7 @@ export default function App() {
     catch(e){console.error(e);}finally{setLoading(false);}
   };
 
-  useEffect(()=>{loadData();},[]);
+  useEffect(()=>{if(!authScreen)loadData();},[authScreen]);
   useEffect(()=>{
     if(!authScreen){fetchFeed(true);const iv=setInterval(()=>fetchFeed(false),FEED_MS);return()=>clearInterval(iv);}
   },[authScreen]);
@@ -359,6 +366,7 @@ export default function App() {
     reports:   isAr?'التقارير':'Reports',
     detail:    isAr?'تفاصيل التقرير':'Report Detail',
     new:       isAr?'إنشاء تقرير':'New Report',
+    settings:  isAr?'الإعدادات':'Settings',
     ai:        isAr?'المساعد الذكي':'AI Assistant',
   };
 
@@ -499,8 +507,8 @@ export default function App() {
                         {feed.map((item,i)=>{
                           const active=i===activeNewsIdx, isNew=newItemIds.has(i);
                           return (
-                            <div key={i} onClick={()=>item.url&&window.open(item.url,'_blank')}
-                              style={{ display:'flex', gap:10, padding:'10px 16px', borderBottom:i<feed.length-1?`1px solid ${C.border}`:'none', alignItems:'flex-start', cursor:item.url?'pointer':'default', transition:'background 0.15s', background:isNew?'rgba(10,102,85,0.04)':active?'rgba(10,102,85,0.03)':'transparent', borderInlineStart:active?`2px solid ${C.teal}`:'2px solid transparent' }}>
+                            <div key={i} onClick={()=>{ const q=encodeURIComponent((item.title||'')+(item.source?' '+item.source:'')); window.open('https://www.google.com/search?q='+q+'&tbm=nws','_blank'); }}
+                              style={{ display:'flex', gap:10, padding:'10px 16px', borderBottom:i<feed.length-1?`1px solid ${C.border}`:'none', alignItems:'flex-start', cursor:'pointer', transition:'background 0.15s', background:isNew?'rgba(10,102,85,0.04)':active?'rgba(10,102,85,0.03)':'transparent', borderInlineStart:active?`2px solid ${C.teal}`:'2px solid transparent' }}>
                               <div style={{ width:30, height:30, borderRadius:8, background:active?C.tealLight:C.surface2, border:`1px solid ${active?C.tealMid:C.border}`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:12, flexShrink:0 }}>
                                 {isNew?'🆕':(item.icon||'📰')}
                               </div>
@@ -509,7 +517,7 @@ export default function App() {
                                 <div style={{ fontSize:10.5, color:C.ink3, marginBottom:4, lineHeight:1.5, fontFamily:FONT }}>{item.summary}</div>
                                 <div style={{ display:'flex', alignItems:'center', gap:5, fontSize:9.5, color:C.ink4 }}>
                                   <span>{item.source}</span><span style={{ width:2, height:2, borderRadius:'50%', background:C.ink4 }}/><span>{item.time}</span>
-                                  {item.url&&<span style={{ color:C.teal }}>↗</span>}
+                                  <span style={{ color:C.teal }}>↗</span>
                                 </div>
                               </div>
                               {item.impact&&<span style={{ background:C.greenBg, color:C.green, borderRadius:20, padding:'2px 8px', fontSize:8.5, fontWeight:700, whiteSpace:'nowrap', flexShrink:0, border:'1px solid rgba(34,134,58,0.2)' }}>{item.impact}</span>}
@@ -543,9 +551,9 @@ export default function App() {
                           <div key={i} style={{ padding:'13px 16px', borderBottom:i<who.length-1?`1px solid ${C.border}`:'none' }}>
                             <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:7 }}>
                               <span style={{ background:item.typeColor||C.coral, color:'white', borderRadius:6, padding:'2px 10px', fontSize:10, fontWeight:700 }}>{item.type}</span>
-                              {item.url&&<a href={item.url} target="_blank" rel="noopener noreferrer" style={{ fontSize:10.5, color:C.blue, fontWeight:600, textDecoration:'none' }}>{t.feedReadMore} ↗</a>}
+                              <a href={'https://www.google.com/search?q='+encodeURIComponent('WHO '+(item.title||''))+'&tbm=nws'} target="_blank" rel="noopener noreferrer" style={{ fontSize:10.5, color:C.blue, fontWeight:600, textDecoration:'none' }}>{t.feedReadMore} ↗</a>
                             </div>
-                            <a href={item.url||'#'} target="_blank" rel="noopener noreferrer" style={{ fontWeight:600, fontSize:12.5, color:C.ink, display:'block', textDecoration:'none', lineHeight:1.4, marginBottom:6, fontFamily:FONT }}
+                            <a href={'https://www.google.com/search?q='+encodeURIComponent('WHO '+(item.title||''))+'&tbm=nws'} target="_blank" rel="noopener noreferrer" style={{ fontWeight:600, fontSize:12.5, color:C.ink, display:'block', textDecoration:'none', lineHeight:1.4, marginBottom:6, fontFamily:FONT }}
                               onMouseEnter={e=>{if(item.url)e.currentTarget.style.color=C.teal;}}
                               onMouseLeave={e=>e.currentTarget.style.color=C.ink}>
                               {item.title}
@@ -620,6 +628,11 @@ export default function App() {
               {/* ══ NEW ════════════════════════════════════════════════ */}
               {page==='new' && (
                 <NewReportForm onSuccess={handleNewReport} onCancel={()=>setPage('dashboard')} lang={lang}/>
+              )}
+
+              {/* ══ SETTINGS ══════════════════════════════════════════════ */}
+              {page==='settings' && (
+                <div/>
               )}
 
             </div>
