@@ -1184,25 +1184,43 @@ def generate_report_content(event_name, city, country, start_date, end_date,
 
     # Fix 4: Replace fake US organization names with real ones
     FAKE_ORG_FIXES = {
-        'جمعية الأدوية الأمريكية': 'PhRMA (Pharmaceutical Research and Manufacturers of America)',
-        'جمعية الادوية الامريكية': 'PhRMA (Pharmaceutical Research and Manufacturers of America)',
-        'هيئة المعايير الغذائية الأمريكية': 'FDA CFSAN (مركز سلامة الأغذية والتغذية التطبيقية)',
-        'هيئة المعايير الغذائية': 'USDA FSIS (دائرة سلامة الغذاء وخدمات التفتيش)',
-        'معهد الأبحاث الصحية الأمريكي': 'NIH (المعاهد الوطنية للصحة)',
-        'معهد الابحاث الصحية الامريكي': 'NIH (المعاهد الوطنية للصحة)',
+        'جمعية الأدوية الأمريكية':          'PhRMA (Pharmaceutical Research and Manufacturers of America)',
+        'جمعية الادوية الامريكية':           'PhRMA (Pharmaceutical Research and Manufacturers of America)',
+        'جمعية صناعة الأدوية':              'PhRMA (Pharmaceutical Research and Manufacturers of America)',
+        'جمعية صناعة الادوية':              'PhRMA (Pharmaceutical Research and Manufacturers of America)',
+        'جمعية الصناعات الدوائية':          'PhRMA (Pharmaceutical Research and Manufacturers of America)',
+        'رابطة صناعة الأدوية':              'PhRMA (Pharmaceutical Research and Manufacturers of America)',
+        'هيئة المعايير الغذائية الأمريكية':  'FDA CFSAN (مركز سلامة الأغذية والتغذية التطبيقية)',
+        'هيئة المعايير الغذائية':            'USDA FSIS (دائرة سلامة الغذاء وخدمات التفتيش)',
+        'معهد الأبحاث الصحية الأمريكي':     'NIH (المعاهد الوطنية للصحة)',
+        'معهد الابحاث الصحية الامريكي':     'NIH (المعاهد الوطنية للصحة)',
+        'معهد البحوث الصحية':               'NIH (المعاهد الوطنية للصحة)',
+        'معهد الصحة الوطني':                'NIH (المعاهد الوطنية للصحة)',
+        'معهد الصحة الوطنية الأمريكية':     'NIH (المعاهد الوطنية للصحة)',
+        'معهد الصحة الوطنية':               'NIH (المعاهد الوطنية للصحة)',
     }
-    # Fix in bilateral_meetings
-    for mtg in data.get('bilateral_meetings', []):
-        entity = mtg.get('entity', '')
+
+    def _fix_org_name(text):
+        """Replace any fake org name found anywhere in a string."""
+        if not text:
+            return text
         for fake, real in FAKE_ORG_FIXES.items():
-            if fake in entity:
-                mtg['entity'] = real
+            if fake in text:
+                text = text.replace(fake, real)
+        return text
+
+    # Fix in bilateral_meetings — entity, title, description fields
+    for mtg in data.get('bilateral_meetings', []):
+        for field in ('entity', 'title', 'description', 'counterpart'):
+            mtg[field] = _fix_org_name(mtg.get(field, ''))
     # Fix in suggested_meetings
     for mtg in data.get('suggested_meetings', []):
-        entity = mtg.get('entity', '')
-        for fake, real in FAKE_ORG_FIXES.items():
-            if fake in entity:
-                mtg['entity'] = real
+        for field in ('entity', 'title', 'description', 'counterpart'):
+            mtg[field] = _fix_org_name(mtg.get(field, ''))
+    # Fix in agenda sessions
+    for day_key in ('day1', 'day2', 'day3', 'day4'):
+        for slot in data.get('agenda', {}).get(day_key, []):
+            slot['title'] = _fix_org_name(slot.get('title', ''))
 
     # Sanitize placeholder leakage
     FAKES = {'John Smith', 'Jane Doe', 'Samandal', 'سمندل', 'جون سميث',
@@ -1210,6 +1228,29 @@ def generate_report_content(event_name, city, country, start_date, end_date,
     def _is_placeholder(v):
         return (not v or v in FAKES or
                 (isinstance(v, str) and ('<' in v or '>' in v or v.startswith('placeholder'))))
+
+    # Fix 4b: Ensure Scott Bessent is in speakers for Milken 2025
+    event_lower = (event_name or '').lower()
+    is_milken_2025 = ('milken' in event_lower and '2025' in (start_date or ''))
+    if is_milken_2025:
+        speakers = data.get('speakers', [])
+        bessent_names = ['بيسنت', 'Bessent', 'bessent']
+        has_bessent = any(
+            any(b in str(sp.get('name', '')) for b in bessent_names)
+            for sp in speakers
+        )
+        if not has_bessent and len(speakers) < 8:
+            speakers.append({
+                'name': 'سكوت بيسنت',
+                'title': 'وزير الخزانة',
+                'organization': 'وزارة الخزانة الأمريكية',
+                'country': 'الولايات المتحدة الأمريكية',
+                'nationality': 'الولايات المتحدة الأمريكية',
+                'strategic_importance': 'يقود سكوت بيسنت وزارة الخزانة الأمريكية ويحدد السياسات المالية والاقتصادية للولايات المتحدة، مما يجعله شخصية محورية في أي مناقشات تتعلق بالاستثمار والتعاون المالي بين المملكة والولايات المتحدة.',
+                'delegation_relevance': 'يمثل بيسنت فرصة ذهبية لمناقشة السياسات المالية الأمريكية وأثرها على قطاع الصحة والاستثمار في المملكة العربية السعودية.'
+            })
+            data['speakers'] = speakers
+            print("[AI] Bessent injected into speakers")
 
     # Fix 5: Hard-inject Princess Reema for USA trips
     is_usa = any(x in (country_en or '').lower() for x in ['united states', 'usa', 'u.s.a', 'america']) or \
