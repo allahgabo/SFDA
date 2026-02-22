@@ -437,7 +437,7 @@ class LiveIntelligenceFeedView(APIView):
     Public endpoint — no auth required (news feed is non-sensitive data).
     """
     permission_classes = []   # public — no auth needed for a news feed
-    _cache = {"data": None, "timestamp": 0}
+    _cache = {"data": None, "timestamp": 0}  # resets on every deploy
     CACHE_SECONDS = 300  # 5 minutes
 
     FALLBACK_FEED = {
@@ -449,7 +449,7 @@ class LiveIntelligenceFeedView(APIView):
                 "source": "SFDA",
                 "time": "Recently",
                 "impact": "HIGH IMPACT",
-                "url": "https://www.sfda.gov.sa/en/news/4410807"
+                "url": "https://news.google.com/search?q=SFDA%20Gene%20Therapy%20Clinical%20Study%20Acute%20Lymphoblastic%20Leukemia%20SFDA&hl=en"
             },
             {
                 "icon": "🌍",
@@ -458,7 +458,7 @@ class LiveIntelligenceFeedView(APIView):
                 "source": "SFDA / WHO",
                 "time": "Recently",
                 "impact": "HIGH IMPACT",
-                "url": "https://www.sfda.gov.sa/en/news/3803838"
+                "url": "https://news.google.com/search?q=SFDA%20WHO%20Regional%20Center%20Nutrition%20Collaboration%20SFDA&hl=en"
             },
             {
                 "icon": "💊",
@@ -467,7 +467,7 @@ class LiveIntelligenceFeedView(APIView):
                 "source": "SFDA / US Embassy",
                 "time": "Recently",
                 "impact": "HIGH IMPACT",
-                "url": "https://www.sfda.gov.sa/en/news/4292351"
+                "url": "https://news.google.com/search?q=SFDA%20Prescription%20Drug%20Clearance%20Requirement%20Travelers%20SFDA&hl=en"
             },
             {
                 "icon": "🔬",
@@ -476,7 +476,7 @@ class LiveIntelligenceFeedView(APIView):
                 "source": "WHO EMRO",
                 "time": "Recently",
                 "impact": None,
-                "url": "https://www.emro.who.int/media/news/saudi-fda-and-oic-organize-workshop-on-strengthening-regulatory-systems-in-collaboration-with-who.html"
+                "url": "https://news.google.com/search?q=SFDA%20OIC%20Workshop%20Regulatory%20Systems%20WHO%20WHO%20EMRO&hl=en"
             },
             {
                 "icon": "🧠",
@@ -485,7 +485,7 @@ class LiveIntelligenceFeedView(APIView):
                 "source": "SFDA",
                 "time": "Recently",
                 "impact": "HIGH IMPACT",
-                "url": "https://www.sfda.gov.sa/en/news"
+                "url": "https://news.google.com/search?q=SFDA%20Leqembi%20Alzheimer%20Treatment%20Saudi%20Arabia%20SFDA&hl=en"
             },
         ],
         "who": [
@@ -495,7 +495,7 @@ class LiveIntelligenceFeedView(APIView):
                 "title": "Measles Outbreak Surge — Americas Region 2026",
                 "summary": "PAHO issued an epidemiological alert on Feb 4 2026 as measles cases reached 1,031 in just 3 weeks across 7 countries, a 43-fold increase vs same period in 2025. Travelers urged to verify vaccination.",
                 "tags": ["Americas", "USA", "Mexico", "Global"],
-                "url": "https://www.paho.org/en/news/4-2-2026-paho-issues-epidemiological-alert-amid-continued-measles-transmission-americas-and"
+                "url": "https://news.google.com/search?q=Measles%20Outbreak%20Americas%202026%20PAHO%20alert%20WHO%20PAHO&hl=en"
             },
             {
                 "type": "Alert",
@@ -503,7 +503,7 @@ class LiveIntelligenceFeedView(APIView):
                 "title": "Nipah Virus — Confirmed Case in Bangladesh (Feb 2026)",
                 "summary": "WHO confirmed one case of Nipah virus infection in Rajshahi Division, Bangladesh on Feb 3, 2026. Patient developed fever and neurological symptoms. Enhanced surveillance underway.",
                 "tags": ["Bangladesh", "Southeast Asia", "Neurological"],
-                "url": "https://www.who.int/southeastasia/outbreaks-and-emergencies/nipah-virus"
+                "url": "https://news.google.com/search?q=Nipah%20Virus%20Bangladesh%202026%20WHO%20WHO&hl=en"
             },
         ],
         "fetched_at": "",
@@ -540,7 +540,7 @@ Return ONLY valid JSON (no markdown, no code fences) with this exact structure:
       "source": "Source name (SFDA, WHO, Reuters, etc.)",
       "time": "X hours ago or X days ago",
       "impact": "HIGH IMPACT or null",
-      "url": "real URL"
+      "url": "EXACT URL from web_search result - copy verbatim, do NOT invent"
     }}
   ],
   "who": [
@@ -550,7 +550,7 @@ Return ONLY valid JSON (no markdown, no code fences) with this exact structure:
       "title": "WHO alert headline",
       "summary": "1-2 sentence summary",
       "tags": ["Region", "Disease"],
-      "url": "real WHO URL"
+      "url": "EXACT URL from web_search result - copy verbatim, do NOT invent"
     }}
   ]
 }}
@@ -559,7 +559,9 @@ Requirements:
 - 5 real news items, prioritizing SFDA and Saudi health news
 - 2 real WHO health alerts currently active
 - Use HIGH IMPACT when Saudi Arabia is directly involved or it's a major drug approval
-- Only include real, verifiable news — no fabricated content"""
+- Only include real, verifiable news — no fabricated content
+- CRITICAL: url must be EXACT URL from web_search results, never guess or fabricate
+- If no real URL found from search, set url to null"""
 
         response = client.messages.create(
             model="claude-haiku-4-5-20251001",
@@ -580,6 +582,24 @@ Requirements:
         full_text = re.sub(r'\s*```$', '', full_text)
 
         data = json.loads(full_text)
+
+        # Keep real URLs from web_search; fall back to Google News only if missing/null
+        import urllib.parse
+
+        def _ensure_url(item, prefix=''):
+            url = item.get('url', '')
+            if url and url != 'null' and str(url).startswith('http'):
+                return  # real URL — keep it
+            title = item.get('title', '') or ''
+            source = item.get('source', '') or ''
+            query = urllib.parse.quote(f'{prefix}{title} {source}'.strip())
+            item['url'] = f'https://www.google.com/search?q={query}&tbm=nws'
+
+        for item in data.get('feed', []):
+            _ensure_url(item)
+        for item in data.get('who', []):
+            _ensure_url(item, prefix='WHO ')
+
         return data
 
     def get(self, request):
@@ -599,7 +619,11 @@ Requirements:
         fallback["fetched_at"] = datetime.datetime.utcnow().isoformat() + "Z"
 
         # ── Strategy 1: Claude with web_search (primary) ────────────────────
-        anthropic_key = getattr(settings, "ANTHROPIC_API_KEY", "")
+        try:
+            from .models import SystemSettings
+            anthropic_key = SystemSettings.get("ANTHROPIC_API_KEY") or getattr(settings, "ANTHROPIC_API_KEY", "")
+        except Exception:
+            anthropic_key = getattr(settings, "ANTHROPIC_API_KEY", "")
         if anthropic_key:
             try:
                 data = self._fetch_with_claude(anthropic_key)
@@ -630,6 +654,22 @@ Return only valid JSON with keys "feed" (5 items) and "who" (2 items). Each feed
                 )
                 raw = resp.choices[0].message.content.strip()
                 data = json.loads(raw)
+                # Keep real URLs; fall back to Google News only if missing/null
+                import urllib.parse
+
+                def _ensure_url_oai(item, prefix=''):
+                    url = item.get('url', '')
+                    if url and url != 'null' and str(url).startswith('http'):
+                        return
+                    title = item.get('title', '') or ''
+                    source = item.get('source', '') or ''
+                    query = urllib.parse.quote(f'{prefix}{title} {source}'.strip())
+                    item['url'] = f'https://www.google.com/search?q={query}&tbm=nws'
+
+                for item in data.get('feed', []):
+                    _ensure_url_oai(item)
+                for item in data.get('who', []):
+                    _ensure_url_oai(item, prefix='WHO ')
                 data["cached"] = False
                 data["source"] = "openai"
                 data.setdefault("fetched_at", datetime.datetime.utcnow().isoformat() + "Z")
@@ -641,3 +681,40 @@ Return only valid JSON with keys "feed" (5 items) and "who" (2 items). Each feed
         # ── Strategy 3: Accurate static fallback ────────────────────────────
         self.__class__._cache = {"data": fallback, "timestamp": now}
         return Response(fallback)
+
+
+class APISettingsView(APIView):
+    """Get and update API keys — admin only."""
+
+    def _mask(self, key):
+        """Show first 12 chars then asterisks."""
+        if not key or len(key) < 12:
+            return key
+        return key[:12] + '*' * (len(key) - 12)
+
+    def get(self, request):
+        from .models import SystemSettings
+        from django.conf import settings
+        # Read from DB first, fall back to env
+        ant = SystemSettings.get('ANTHROPIC_API_KEY') or getattr(settings, 'ANTHROPIC_API_KEY', '')
+        oai = SystemSettings.get('OPENAI_API_KEY')    or getattr(settings, 'OPENAI_API_KEY', '')
+        return Response({
+            'anthropic_key_set':  bool(ant),
+            'openai_key_set':     bool(oai),
+            'anthropic_key_mask': self._mask(ant),
+            'openai_key_mask':    self._mask(oai),
+        })
+
+    def post(self, request):
+        from .models import SystemSettings
+        data = request.data
+        saved = []
+        if 'anthropic_key' in data and data['anthropic_key'].strip():
+            SystemSettings.set('ANTHROPIC_API_KEY', data['anthropic_key'].strip())
+            saved.append('anthropic')
+        if 'openai_key' in data and data['openai_key'].strip():
+            SystemSettings.set('OPENAI_API_KEY', data['openai_key'].strip())
+            saved.append('openai')
+        if not saved:
+            return Response({'error': 'No keys provided'}, status=400)
+        return Response({'saved': saved, 'message': 'API keys saved successfully'})
