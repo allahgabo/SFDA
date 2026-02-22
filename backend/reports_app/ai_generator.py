@@ -19,7 +19,7 @@ KEY IMPROVEMENTS vs v2:
   - Bilateral meetings use research-verified institutions
 """
 
-import re, time, json
+import re, time, json, os
 from django.conf import settings
 
 
@@ -761,8 +761,8 @@ def generate_report_content(event_name, city, country, start_date, end_date,
     Phase 1C  → Website scraping (if event_website provided)
     Phase 2   → OpenAI gpt-4o / Claude Sonnet — JSON generation (12k tokens)
     """
-    anthropic_key = getattr(settings, 'ANTHROPIC_API_KEY', '')
-    openai_key    = getattr(settings, 'OPENAI_API_KEY', '')
+    anthropic_key = getattr(settings, 'ANTHROPIC_API_KEY', '') or os.environ.get('ANTHROPIC_API_KEY', '')
+    openai_key    = getattr(settings, 'OPENAI_API_KEY', '')    or os.environ.get('OPENAI_API_KEY', '')
 
     use_claude = bool(anthropic_key and 'YOUR' not in anthropic_key)
     use_openai = bool(openai_key    and 'YOUR' not in openai_key)
@@ -820,7 +820,7 @@ def generate_report_content(event_name, city, country, start_date, end_date,
             "founder": "Michael Milken (Chairman)",
             "website": "https://www.globalconference.org",
             "2025": {
-                "edition": "28th Annual",
+                "edition": "29th Annual",
                 "theme": "Toward a Flourishing Future",
                 "theme_arabic": "نحو مستقبل مزدهر",
                 "dates": "May 4–7, 2025",
@@ -1054,6 +1054,39 @@ def generate_report_content(event_name, city, country, start_date, end_date,
 
     # ── Post-processing: Fix known errors ─────────────────────────────────────
 
+    # Fix 0a: Event name capitalization — fix lowercase event names
+    for field in ['event_name', 'title']:
+        val = data.get(field, '')
+        if val and val == val.lower():
+            import re as _re
+            data[field] = _re.sub(r'\b(milken)\b', 'Milken', val, flags=_re.IGNORECASE)
+            data[field] = _re.sub(r'\b(institute)\b', 'Institute', data[field], flags=_re.IGNORECASE)
+            data[field] = _re.sub(r'\b(global)\b', 'Global', data[field], flags=_re.IGNORECASE)
+            data[field] = _re.sub(r'\b(conference)\b', 'Conference', data[field], flags=_re.IGNORECASE)
+
+    # Fix 0b: Remove duplicate entries in suggested_meetings
+    seen_entities = set()
+    deduped = []
+    for mtg in data.get('suggested_meetings', []):
+        entity = mtg.get('entity', '').strip()
+        key = entity[:30].lower()
+        if key not in seen_entities:
+            seen_entities.add(key)
+            deduped.append(mtg)
+    data['suggested_meetings'] = deduped
+
+    # Fix 0c: Replace "معهد الأبحاث الصحية" with proper NIH name
+    for mtg in data.get('suggested_meetings', []) + data.get('bilateral_meetings', []) + data.get('agenda', []):
+        for field in ['entity', 'title', 'description']:
+            val = mtg.get(field, '')
+            if 'معهد الأبحاث الصحية' in val:
+                mtg[field] = val.replace('معهد الأبحاث الصحية', 'NIH (المعاهد الوطنية للصحة)')
+
+    # Fix 0d: Fix copyright year — always use current report year not hardcoded 2026
+    report_year = str(start_date)[:4] if start_date else '2025'
+    if data.get('copyright'):
+        data['copyright'] = data['copyright'].replace('2026', report_year).replace('2025', report_year)
+
     # Fix 1: Timezone — Los Angeles in May is UTC-7 (PDT), never UTC-5
     city_lower = city.lower() if city else ''
     country_lower = country_en.lower() if country_en else ''
@@ -1177,6 +1210,29 @@ def generate_report_content(event_name, city, country, start_date, end_date,
     def _is_placeholder(v):
         return (not v or v in FAKES or
                 (isinstance(v, str) and ('<' in v or '>' in v or v.startswith('placeholder'))))
+
+    # Fix 5: Hard-inject Princess Reema for USA trips
+    is_usa = any(x in (country_en or '').lower() for x in ['united states', 'usa', 'u.s.a', 'america']) or \
+               any(x in (country or '').lower() for x in ['الولايات المتحدة', 'أمريكا', 'امريكا'])
+    if is_usa:
+        emb = data.setdefault('embassy', {})
+        amb_name = emb.get('ambassador_name', '')
+        if not amb_name or _is_placeholder(amb_name) or 'يُحدَّد' in str(amb_name):
+            emb['ambassador_name'] = 'الأميرة ريما بنت بندر بن سلطان بن عبدالعزيز آل سعود'
+        ambs = data.get('key_ambassadors', [])
+        if ambs:
+            for amb in ambs:
+                n = amb.get('name', '')
+                if not n or _is_placeholder(n) or 'يُحدَّد' in str(n):
+                    amb['name'] = 'الأميرة ريما بنت بندر بن سلطان بن عبدالعزيز آل سعود'
+                    amb['title'] = 'سفير خادم الحرمين الشريفين لدى الولايات المتحدة الأمريكية'
+        else:
+            data['key_ambassadors'] = [{
+                'name': 'الأميرة ريما بنت بندر بن سلطان بن عبدالعزيز آل سعود',
+                'title': 'سفير خادم الحرمين الشريفين لدى الولايات المتحدة الأمريكية',
+                'country': 'الولايات المتحدة الأمريكية',
+                'relevance': 'سمو الأميرة ريما هي أول سفيرة في تاريخ المملكة العربية السعودية، تتولى منصبها منذ فبراير 2019. تضطلع بدور محوري في تنسيق الزيارات الرسمية ودعم الوفود الحكومية السعودية في واشنطن، مع التركيز على تعزيز العلاقات الثنائية في مجالات الصحة والاستثمار والتكنولوجيا.'
+            }]
 
     if _is_placeholder(data.get('embassy', {}).get('ambassador_name', '')):
         data.setdefault('embassy', {})['ambassador_name'] = 'يُحدَّد لاحقاً'
