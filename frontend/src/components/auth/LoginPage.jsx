@@ -2,58 +2,145 @@ import { useState } from 'react';
 import AuthLayout from './AuthLayout';
 import { authLogin, saveAuth } from '../../services/api';
 
-/* ─── Shared input component ─────────────────────────── */
-function Field({ label, type='text', value, onChange, placeholder, error, isAr, font, autoComplete, rightSlot }) {
+// ─────────────────────────────────────────────────────────
+//  LoginPage has NO lang state of its own.
+//  All language values come from AuthLayout's render prop:
+//  { lang, t, isAr, dir, font }
+//  This means switching language in AuthLayout instantly
+//  re-renders every string, label, and direction here.
+// ─────────────────────────────────────────────────────────
+
+function BrandLogo() {
+  return (
+    <svg width="58" height="58" viewBox="0 0 58 58" fill="none">
+      <defs>
+        <linearGradient id="vg" x1="0" y1="0" x2="58" y2="58" gradientUnits="userSpaceOnUse">
+          <stop offset="0%"   stopColor="#a78bfa" />
+          <stop offset="55%"  stopColor="#6366f1" />
+          <stop offset="100%" stopColor="#38bdf8" />
+        </linearGradient>
+      </defs>
+      <rect width="58" height="58" rx="15" fill="url(#vg)" fillOpacity="0.10" />
+      <path d="M13 15 L29 45 L45 15"
+        stroke="url(#vg)" strokeWidth="6"
+        strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      <path d="M29 45 L40 22"
+        stroke="#38bdf8" strokeWidth="3.5"
+        strokeLinecap="round" strokeOpacity="0.85" />
+    </svg>
+  );
+}
+
+function EyeIcon({ show }) {
+  return show ? (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+      stroke="#9ca3af" strokeWidth="2" strokeLinecap="round">
+      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+      <circle cx="12" cy="12" r="3"/>
+    </svg>
+  ) : (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+      stroke="#9ca3af" strokeWidth="2" strokeLinecap="round">
+      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+      <line x1="1" y1="1" x2="23" y2="23"/>
+    </svg>
+  );
+}
+
+function EmailIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+      stroke="#9ca3af" strokeWidth="2" strokeLinecap="round">
+      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+      <polyline points="22,6 12,13 2,6"/>
+    </svg>
+  );
+}
+
+function LockIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+      stroke="#9ca3af" strokeWidth="2" strokeLinecap="round">
+      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+      <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+    </svg>
+  );
+}
+
+function Field({
+  label, type = 'text', value, onChange, placeholder,
+  error, isAr, font, autoComplete, sideIcon, rightSlot, labelRight,
+}) {
   const [focused, setFocused] = useState(false);
   return (
-    <div style={{ marginBottom: 20 }}>
-      <label style={{ display:'block', fontSize:12.5, fontWeight:700, color:'#374151', marginBottom:7, fontFamily:font }}>
-        {label}
-      </label>
-      <div style={{ position:'relative' }}>
+    <div style={{ marginBottom: 14 }}>
+      <div style={{
+        display: 'flex', justifyContent: 'space-between',
+        alignItems: 'center', marginBottom: 6,
+      }}>
+        <label style={{ fontSize: 13, fontWeight: 600, color: '#1e1b4b', fontFamily: font }}>
+          {label}
+        </label>
+        {labelRight}
+      </div>
+      <div style={{ position: 'relative' }}>
         <input
           type={type} value={value} onChange={onChange}
           placeholder={placeholder} autoComplete={autoComplete}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
+          onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
+          dir={isAr ? 'rtl' : 'ltr'}
           style={{
-            width:'100%', padding: rightSlot ? `12px ${isAr?'16px':'44px'} 12px ${isAr?'44px':'16px'}` : '12px 16px',
-            border: `1.5px solid ${error ? '#ef4444' : focused ? '#3b82f6' : '#e2e8f0'}`,
+            width: '100%', boxSizing: 'border-box',
+            padding: '10px 14px',
+            paddingRight: sideIcon  ? '40px' : '14px',
+            paddingLeft:  rightSlot ? '40px' : '14px',
+            border: `1.5px solid ${error ? '#ef4444' : focused ? '#6366f1' : '#e5e7eb'}`,
             borderRadius: 10, fontSize: 13.5, color: '#0f172a',
-            background: focused ? '#fff' : '#f8fafc',
-            outline: 'none', boxSizing:'border-box', width:'100%',
-            transition: 'all 0.15s', fontFamily: font,
-            direction: isAr ? 'rtl' : 'ltr',
-            boxShadow: focused ? '0 0 0 3px rgba(59,130,246,0.1)' : 'none',
+            background: '#fff', outline: 'none',
+            transition: 'border-color 0.15s, box-shadow 0.15s', fontFamily: font,
+            boxShadow: focused ? '0 0 0 3px rgba(99,102,241,0.12)' : 'none',
+            textAlign: isAr ? 'right' : 'left',
           }}
         />
+        {sideIcon && (
+          <div style={{
+            position: 'absolute', top: '50%', right: 13,
+            transform: 'translateY(-50%)',
+            display: 'flex', alignItems: 'center', pointerEvents: 'none',
+          }}>
+            {sideIcon}
+          </div>
+        )}
         {rightSlot && (
-          <div style={{ position:'absolute', top:'50%', transform:'translateY(-50%)', [isAr?'left':'right']:14, cursor:'pointer' }}>
+          <div style={{
+            position: 'absolute', top: '50%', left: 13,
+            transform: 'translateY(-50%)',
+            display: 'flex', alignItems: 'center', cursor: 'pointer',
+          }}>
             {rightSlot}
           </div>
         )}
       </div>
-      {error && <p style={{ margin:'5px 0 0', fontSize:11.5, color:'#ef4444', fontFamily:font }}>{error}</p>}
+      {error && (
+        <p style={{ margin: '4px 0 0', fontSize: 11.5, color: '#ef4444', fontFamily: font }}>
+          {error}
+        </p>
+      )}
     </div>
   );
 }
 
-/* ─── Eye toggle icon ────────────────────────────────── */
-function EyeIcon({ show }) {
-  return show
-    ? <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-    : <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>;
-}
-
+/* ══════════════════════════════════════════════════════════
+   LoginPage — NO lang state, driven entirely by AuthLayout
+═══════════════════════════════════════════════════════════ */
 export default function LoginPage({ onLogin, onGoSignup, onGoForgot, initialLang }) {
-  const [email,    setEmail]    = useState('');
-  const [password, setPassword] = useState('');
-  const [showPwd,  setShowPwd]  = useState(false);
-  const [remember, setRemember] = useState(false);
-  const [loading,  setLoading]  = useState(false);
-  const [errors,   setErrors]   = useState({});
-  const [apiErr,   setApiErr]   = useState('');
-  const [lang,     setLang]     = useState(initialLang);
+  const [email,     setEmail]     = useState('');
+  const [password,  setPassword]  = useState('');
+  const [showPwd,   setShowPwd]   = useState(false);
+  const [loading,   setLoading]   = useState(false);
+  const [errors,    setErrors]    = useState({});
+  const [apiErr,    setApiErr]    = useState('');
+  const [activeTab, setActiveTab] = useState('login');
 
   const validate = (t) => {
     const e = {};
@@ -71,7 +158,7 @@ export default function LoginPage({ onLogin, onGoSignup, onGoForgot, initialLang
       const res = await authLogin(email, password);
       saveAuth(res.data.token || res.data.access, res.data.user || { email });
       onLogin?.();
-    } catch (err) {
+    } catch {
       setApiErr(t.authError);
     } finally {
       setLoading(false);
@@ -79,86 +166,172 @@ export default function LoginPage({ onLogin, onGoSignup, onGoForgot, initialLang
   };
 
   return (
-    <AuthLayout lang={initialLang} onLangChange={setLang}>
-      {({ t, isAr, dir, font }) => (
-        <div style={{ direction: dir, fontFamily: font }}>
+    // Pass initialLang so AuthLayout initialises correctly.
+    // onLangChange is NOT needed here — AuthLayout owns lang.
+    <AuthLayout lang={initialLang}>
+      {({ lang, t, isAr, dir, font }) => (
+        /* direction + font come live from AuthLayout every render */
+        <div style={{
+          display: 'flex', flexDirection: 'column', alignItems: 'stretch',
+          direction: dir, fontFamily: font,
+        }}>
 
-          {/* Header */}
-          <div style={{ marginBottom: 36 }}>
-            <div style={{ display:'inline-flex', alignItems:'center', gap:8, background:'#eff6ff', borderRadius:8, padding:'5px 12px', marginBottom:16 }}>
-              <span style={{ width:6, height:6, borderRadius:'50%', background:'#3b82f6', display:'inline-block' }}/>
-              <span style={{ fontSize:11.5, fontWeight:700, color:'#3b82f6', fontFamily:"'DM Sans',sans-serif", letterSpacing:'0.05em' }}>SFDA TRAVEL</span>
-            </div>
-            <h2 style={{ margin:'0 0 8px', fontSize:28, fontWeight:900, color:'#0d1829', lineHeight:1.2, letterSpacing: isAr?0:'-0.04em' }}>{t.loginTitle}</h2>
-            <p style={{ margin:0, fontSize:13.5, color:'#64748b' }}>{t.loginSubtitle}</p>
+          {/* ① Logo */}
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 18 }}>
+            <BrandLogo />
           </div>
 
-          {/* API error banner */}
+          {/* ② Title + subtitle */}
+          <div style={{ textAlign: 'center', marginBottom: 22 }}>
+            <h2 style={{ margin: '0 0 7px', fontSize: 19, fontWeight: 800, color: '#1e1b4b', fontFamily: font }}>
+              {isAr ? 'استخبارات السفر - الهيئة' : 'Travel Intelligence - Authority'}
+            </h2>
+            <p style={{ margin: 0, fontSize: 12.5, color: '#9ca3af', lineHeight: 1.6, fontFamily: font }}>
+              {isAr
+                ? 'سجل الدخول للوصول إلى تقاريرك والبيانات التحليلية'
+                : 'Sign in to access your reports and analytics data'}
+            </p>
+          </div>
+
+          {/* ③ Tabs — labels from T via t */}
+          <div style={{
+            display: 'grid', gridTemplateColumns: '1fr 1fr',
+            border: '1.5px solid #e5e7eb', borderRadius: 10,
+            overflow: 'hidden', marginBottom: 16,
+          }}>
+            {[
+              { key: 'login',  label: t.loginBtn  },
+              { key: 'signup', label: t.signUpLink },
+            ].map(tab => (
+              <button
+                key={tab.key}
+                onClick={() => {
+                  setActiveTab(tab.key);
+                  if (tab.key === 'signup') onGoSignup?.(lang);
+                }}
+                style={{
+                  padding: '10px 8px', fontFamily: font,
+                  fontSize: 13, fontWeight: 600,
+                  border: 'none', cursor: 'pointer', transition: 'all 0.15s',
+                  background: activeTab === tab.key ? '#1e1b4b' : '#fff',
+                  color:      activeTab === tab.key ? '#fff'    : '#9ca3af',
+                }}>
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {/* ④ Google button */}
+          <button style={{
+            width: '100%', display: 'flex', alignItems: 'center',
+            justifyContent: 'center', gap: 10, padding: '11px 16px',
+            border: '1.5px solid #e5e7eb', borderRadius: 10,
+            background: '#fff', cursor: 'pointer', fontFamily: font,
+            fontSize: 13.5, fontWeight: 600, color: '#1e1b4b', marginBottom: 12,
+          }}>
+            <svg width="18" height="18" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            {isAr ? 'المتابعة باستخدام Google' : 'Continue with Google'}
+          </button>
+
+          {/* ⑤ Divider */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+            <div style={{ flex: 1, height: 1, background: '#e5e7eb' }} />
+            <span style={{ fontSize: 11.5, color: '#9ca3af', whiteSpace: 'nowrap', fontFamily: font }}>
+              {isAr ? 'أو المتابعة بالبريد الإلكتروني' : 'Or continue with email'}
+            </span>
+            <div style={{ flex: 1, height: 1, background: '#e5e7eb' }} />
+          </div>
+
+          {/* ⑥ API error */}
           {apiErr && (
-            <div style={{ display:'flex', alignItems:'center', gap:10, background:'#fef2f2', border:'1.5px solid #fecaca', borderRadius:10, padding:'11px 14px', marginBottom:20 }}>
-              <span style={{ fontSize:16 }}>⚠️</span>
-              <span style={{ fontSize:13, color:'#dc2626', fontWeight:500, fontFamily:font }}>{apiErr}</span>
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: 8,
+              background: '#fef2f2', border: '1.5px solid #fecaca',
+              borderRadius: 10, padding: '9px 13px', marginBottom: 12,
+            }}>
+              <span style={{ fontSize: 14 }}>⚠️</span>
+              <span style={{ fontSize: 12.5, color: '#dc2626', fontFamily: font }}>{apiErr}</span>
             </div>
           )}
 
-          {/* Fields */}
-          <Field label={t.emailLabel} type="email" value={email}
-            onChange={e => { setEmail(e.target.value); setErrors(p=>({...p,email:''})); }}
-            placeholder={t.emailPlaceholder} error={errors.email}
-            isAr={isAr} font={font} autoComplete="email" />
-
-          <Field label={t.passwordLabel} type={showPwd?'text':'password'} value={password}
-            onChange={e => { setPassword(e.target.value); setErrors(p=>({...p,password:''})); }}
-            placeholder={t.passwordPlaceholder} error={errors.password}
-            isAr={isAr} font={font} autoComplete="current-password"
-            rightSlot={<span onClick={() => setShowPwd(p=>!p)}><EyeIcon show={showPwd}/></span>}
+          {/* ⑦ Email */}
+          <Field
+            label={t.emailLabel}
+            type="email" value={email}
+            onChange={e => { setEmail(e.target.value); setErrors(p => ({ ...p, email: '' })); }}
+            placeholder="you@example.com"
+            error={errors.email} isAr={isAr} font={font}
+            autoComplete="email" sideIcon={<EmailIcon />}
           />
 
-          {/* Remember + Forgot */}
-          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:28, direction:dir }}>
-            <label style={{ display:'flex', alignItems:'center', gap:8, cursor:'pointer', fontSize:13, color:'#475569', fontFamily:font }}>
-              <div onClick={() => setRemember(p=>!p)}
-                style={{ width:18, height:18, borderRadius:5, border:`1.5px solid ${remember?'#3b82f6':'#d1d5db'}`, background:remember?'#3b82f6':'white', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, transition:'all 0.15s', cursor:'pointer' }}>
-                {remember && <svg width="10" height="10" viewBox="0 0 12 12"><path d="M2 6l3 3 5-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/></svg>}
-              </div>
-              {t.rememberMe}
-            </label>
-            <button onClick={() => onGoForgot?.(lang)}
-              style={{ background:'none', border:'none', cursor:'pointer', color:'#3b82f6', fontSize:12.5, fontWeight:600, fontFamily:font, padding:0 }}>
-              {t.forgotPassword}
-            </button>
-          </div>
+          {/* ⑧ Password */}
+          <Field
+            label={t.passwordLabel}
+            type={showPwd ? 'text' : 'password'} value={password}
+            onChange={e => { setPassword(e.target.value); setErrors(p => ({ ...p, password: '' })); }}
+            placeholder="••••••••"
+            error={errors.password} isAr={isAr} font={font}
+            autoComplete="current-password"
+            sideIcon={<LockIcon />}
+            rightSlot={<span onClick={() => setShowPwd(p => !p)}><EyeIcon show={showPwd} /></span>}
+            labelRight={
+              <button onClick={() => onGoForgot?.(lang)} style={{
+                background: 'none', border: 'none', cursor: 'pointer',
+                padding: 0, color: '#6366f1', fontSize: 12,
+                fontWeight: 600, fontFamily: font,
+              }}>
+                {t.forgotPassword}
+              </button>
+            }
+          />
 
-          {/* Submit */}
-          <button onClick={() => handleSubmit(t)} disabled={loading}
+          {/* ⑨ Submit */}
+          <button
+            onClick={() => handleSubmit(t)}
+            disabled={loading}
             style={{
-              width:'100%', padding:'13px 20px',
-              background: loading ? '#93c5fd' : 'linear-gradient(135deg,#1c3370,#2d4fa6)',
-              color:'white', border:'none', borderRadius:12,
-              fontSize:14.5, fontWeight:700, cursor: loading?'not-allowed':'pointer',
-              fontFamily:font, transition:'all 0.2s', letterSpacing: isAr?0:'0.01em',
-              boxShadow: loading ? 'none' : '0 4px 16px rgba(28,51,112,0.35)',
-            }}
-            onMouseEnter={e => { if (!loading) e.currentTarget.style.transform='translateY(-1px)'; }}
-            onMouseLeave={e => { e.currentTarget.style.transform='none'; }}>
-            {loading ? (
-              <span style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:8 }}>
-                <span style={{ width:14, height:14, border:'2px solid rgba(255,255,255,0.4)', borderTopColor:'white', borderRadius:'50%', display:'inline-block', animation:'spin 0.7s linear infinite' }}/>
-                {t.loggingIn}
-              </span>
-            ) : t.loginBtn}
+              width: '100%', padding: '13px',
+              background: loading ? '#818cf8' : '#1e1b4b',
+              color: '#fff', border: 'none', borderRadius: 10,
+              fontSize: 14.5, fontWeight: 700,
+              cursor: loading ? 'not-allowed' : 'pointer',
+              fontFamily: font, transition: 'background 0.2s',
+              boxShadow: '0 4px 16px rgba(30,27,75,0.22)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+            }}>
+            {loading && (
+              <span style={{
+                width: 14, height: 14,
+                border: '2px solid rgba(255,255,255,0.35)',
+                borderTopColor: '#fff', borderRadius: '50%',
+                display: 'inline-block',
+                animation: 'spin 0.7s linear infinite',
+              }} />
+            )}
+            {loading ? t.loggingIn : t.loginBtn}
           </button>
 
-          {/* Signup link */}
-          <p style={{ textAlign:'center', marginTop:28, fontSize:13, color:'#64748b', fontFamily:font }}>
-            {t.noAccount}{' '}
-            <button onClick={() => onGoSignup?.(lang)}
-              style={{ background:'none', border:'none', cursor:'pointer', color:'#3b82f6', fontWeight:700, fontSize:13, fontFamily:font, padding:0 }}>
-              {t.signUpLink}
-            </button>
+          {/* ⑩ ToS */}
+          <p style={{
+            textAlign: 'center', marginTop: 14, marginBottom: 0,
+            fontSize: 11.5, color: '#9ca3af', fontFamily: font, lineHeight: 1.6,
+          }}>
+            {isAr ? 'بالمتابعة، أنت توافق على ' : 'By continuing, you agree to the '}
+            <a href="#" style={{ color: '#6366f1', fontWeight: 600, textDecoration: 'none' }}>
+              {t.termsLink}
+            </a>
+            {' '}{t.andText}{' '}
+            <a href="#" style={{ color: '#6366f1', fontWeight: 600, textDecoration: 'none' }}>
+              {t.privacyLink}
+            </a>
           </p>
 
-          <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+          <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
         </div>
       )}
     </AuthLayout>
